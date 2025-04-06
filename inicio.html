@@ -14,11 +14,13 @@
                 <label for="username">Usuario</label>
                 <input type="text" id="username" placeholder="Ingresa tu usuario">
                 <p id="userError" class="error-message">El usuario es obligatorio</p>
+                <p id="userNotFound" class="error-message" style="display:none;">Usuario no encontrado</p>
             </div>
             <div class="input-group">
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" placeholder="Ingresa tu contraseña">
                 <p id="passError" class="error-message">La contraseña es obligatoria</p>
+                <p id="passIncorrect" class="error-message" style="display:none;">Contraseña incorrecta</p>
             </div>
             <div class="remember-me">
                 <input type="checkbox" id="rememberMe">
@@ -32,24 +34,77 @@
         <a href="usuario.html" class="register-link">¿No tienes una cuenta? Regístrate</a>
     </div>
     <script>
+        // Cargar usuarios del almacenamiento local si existen
+        function loadUsers() {
+            let users = localStorage.getItem("users");
+            return users ? JSON.parse(users) : [];
+        }
+
+        // Guardar usuarios en almacenamiento local
+        function saveUsers(users) {
+            localStorage.setItem("users", JSON.stringify(users));
+        }
+
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault();
+
             let user = document.getElementById("username");
             let pass = document.getElementById("password");
             let userError = document.getElementById("userError");
             let passError = document.getElementById("passError");
+            let userNotFound = document.getElementById("userNotFound");
+            let passIncorrect = document.getElementById("passIncorrect");
+
             userError.style.display = "none";
             passError.style.display = "none";
+            userNotFound.style.display = "none";
+            passIncorrect.style.display = "none";
+
+            let users = loadUsers();
+            let userFound = users.find(u => u.username === user.value.trim());
+
             if (user.value.trim() === "") {
                 userError.style.display = "block";
                 return;
             }
+
+            if (!userFound) {
+                userNotFound.style.display = "block";
+                return;
+            }
+
             if (pass.value.trim() === "") {
                 passError.style.display = "block";
                 return;
             }
-            alert("Inicio de sesión exitoso");
+
+            if (userFound.password !== pass.value.trim()) {
+                passIncorrect.style.display = "block";
+                return;
+            }
+
+            // Si el usuario seleccionó "Recuérdame", guardar los datos en localStorage
+            if (document.getElementById("rememberMe").checked) {
+                localStorage.setItem("currentUser", JSON.stringify(userFound));
+            }
+
+            // Redirigir a la página restaurante.html
+            window.location.href = "restaurante.html";
         });
+
+        // Opcionalmente, puedes agregar la funcionalidad para que un usuario registre una cuenta, algo como esto:
+        // Este código iría en otro archivo como "usuario.html" o en un formulario de registro adicional.
+        function registerUser(username, password) {
+            let users = loadUsers();
+            let userExists = users.some(u => u.username === username);
+            if (userExists) {
+                alert("Este usuario ya está registrado.");
+                return;
+            }
+            users.push({ username: username, password: password });
+            saveUsers(users);
+            alert("Usuario registrado con éxito.");
+        }
     </script>
 </body>
 </html>
