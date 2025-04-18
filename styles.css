@@ -8,10 +8,12 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background: url('img/usuario.jpg') no-repeat center center/cover;
+    background: url('img/usuario.jpg') no-repeat center center;
+    background-size: 100% 100%;
     position: relative;
     overflow: hidden;
 }
+
 
 /* Simulación de estrellas */
 body::before {
@@ -32,6 +34,7 @@ body::before {
     width: 350px;
     text-align: center;
     color: white;
+    margin-top: 170px;
 }
 
 h2 {
