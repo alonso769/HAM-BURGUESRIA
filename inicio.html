@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #d01031;
+            --primary-color: #ca1334;
+            --primary-color-rgb: 202, 19, 52; /* Valores RGB de #ca1334 */
             --secondary-color: #ffffff;
             --accent-color: #ffd700;
             --text-color: #333333;
@@ -34,28 +35,35 @@
         header {
             background-color: var(--primary-color);
             padding: 15px 0;
-            position: fixed;
+            position: fixed; /* Mantenemos la barra fija */
             width: 100%;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, padding 0.3s ease; /* Añadimos transición para el fondo y el padding */
         }
 
         .header-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Asegura el espacio entre logo y menú */
             align-items: center;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
+        .logo-container { /* Nuevo contenedor para el logo */
+            display: flex;
+            align-items: center;
+        }
+
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 60px; /* Reducimos un poco el tamaño del logo al hacer scroll (opcional) */
+            height: 60px;
             border-radius: 50%;
             background-color: var(--primary-color);
             overflow: hidden;
+            transition: width 0.3s ease, height 0.3s ease; /* Transición para el tamaño del logo (opcional) */
         }
 
         .logo img {
@@ -93,6 +101,22 @@
             cursor: pointer;
         }
 
+        /* Estilos para la barra de navegación al hacer scroll */
+        header.scrolled {
+            background-color: rgba(var(--primary-color-rgb), 0.8); /* Fondo con transparencia */
+            padding: 10px 0; /* Reducimos el padding */
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Ligera sombra */
+        }
+
+        header.scrolled .logo {
+            width: 50px; /* Reducimos aún más el logo al hacer scroll (opcional) */
+            height: 50px;
+        }
+
+        header.scrolled .nav-menu a {
+            font-size: 14px; /* Reducimos el tamaño de la fuente de los enlaces (opcional) */
+        }
+
         /* Hero Section */
         .hero {
             height: 100vh;
@@ -103,7 +127,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            margin-top: 110px;
+            margin-top: 70px;
         }
 
         .hero::before {
@@ -525,8 +549,9 @@
     <!-- Header -->
     <header>
         <div class="header-container">
-            <div class="logo">
-                <img src="img/logo_Ralph.png" alt="Ralph's Sanguchería Logo">
+            <div class="logo-container"> <div class="logo">
+                    <img src="img/logo.png" alt="Ralph's Sanguchería Logo">
+                </div>
             </div>
             <ul class="nav-menu">
                 <li><a href="#inicio">Inicio</a></li>
@@ -693,7 +718,7 @@
     <footer id="contacto">
         <div class="footer-container">
             <div class="footer-logo">
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo_Ralph-dRR03WY9IIp9uFUfeHyW0t5wJ08dLs.png" alt="Ralph's Sanguchería Logo">
+                <img src="img/logo.png" alt="Ralph's Sanguchería Logo">
                 <p>Los mejores sánguches del Perú con sabores auténticos y únicos.</p>
             </div>
             <div class="footer-links">
@@ -722,12 +747,12 @@
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2024 Ralph's Sanguchería. Todos los derechos reservados.</p>
+            <p>&copy; 2025 Ralph's Sanguchería. Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <script>
-        // Mobile Menu Toggle
+        // Mobile Menu Toggle (tu código existente)
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.querySelector('.nav-menu');
 
@@ -735,20 +760,20 @@
             navMenu.classList.toggle('active');
         });
 
-        // Smooth Scrolling for Anchor Links
+        // Smooth Scrolling for Anchor Links (tu código existente)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
+
                 const targetId = this.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
-                
+
                 if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 100,
                         behavior: 'smooth'
                     });
-                    
+
                     // Close mobile menu if open
                     if (navMenu.classList.contains('active')) {
                         navMenu.classList.remove('active');
@@ -756,6 +781,18 @@
                 }
             });
         });
+
+        // Efecto de desvanecimiento de la barra de navegación al hacer scroll
+        const header = document.querySelector('header');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { // Ajusta este valor para determinar cuándo se activa el efecto
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
     </script>
+</body>
 </body>
 </html>
