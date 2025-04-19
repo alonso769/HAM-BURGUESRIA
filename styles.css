@@ -33,7 +33,7 @@ body::before {
     box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
     width: 350px;
     text-align: center;
-    color: white;
+    color: #010f32;
     margin-top: 170px;
 }
 
@@ -71,8 +71,8 @@ input::placeholder {
 
 button {
     width: 100%;
-    background: #ffcc00;
-    color: #4b0082;
+    background: #6b0119e3;
+    color: #010f32;
     border: none;
     padding: 10px;
     font-size: 16px;
@@ -83,7 +83,8 @@ button {
 }
 
 button:hover {
-    background: #ffd633;
+    color: white;
+    background: #6b011afa;
 }
 
 .options {
@@ -94,7 +95,7 @@ button:hover {
 }
 
 a {
-    color: #ffcc00;
+    color: #010f32;
     text-decoration: none;
 }
 
@@ -103,7 +104,7 @@ a:hover {
 }
 
 .error-message {
-    color: #ff0000;
+    color: #6b0119e3;
     font-size: 12px;
     display: none;
     margin-top: 5px;
@@ -113,7 +114,7 @@ a:hover {
     display: block;
     margin-top: 15px;
     font-size: 14px;
-    color: #ffcc00;
+    color: #010f32;
     text-decoration: none;
 }
 
@@ -129,7 +130,7 @@ a:hover {
 }
 
 .remember-me input[type="checkbox"] {
-    accent-color: #ffcc00;
+    accent-color: #010f32;
     margin-right: 8px;
     cursor: pointer;
     width: 18px;
@@ -138,7 +139,8 @@ a:hover {
 
 .remember-me label {
     font-size: 14px;
-    color: white;
+    color: #010f32;
     cursor: pointer;
-    user-select: none; /* Evita que el texto se seleccione al hacer clic */
+    user-select: none;
+    margin-top: 5px;
 }
