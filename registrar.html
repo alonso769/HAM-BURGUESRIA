@@ -6,20 +6,119 @@
     <title>Registrar Usuario</title>
     <link rel="shortcut icon" href="img/minilogo.png" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .input-group {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: -10px;
+            top: 70%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+        }
+    </style>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+      import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+      // Tu configuración de Firebase (asegúrate de que sea la misma que en ingresar.html)
+      const firebaseConfig = {
+        apiKey: "AIzaSyDfJ0fZ30u3RIWjWBRMCMepSoC9P881K3E",
+        authDomain: "ralph-s-sangucheria.firebaseapp.com",
+        projectId: "ralph-s-sangucheria",
+        storageBucket: "ralph-s-sangucheria.firebasestorage.app",
+        messagingSenderId: "795336985600",
+        appId: "1:795336985600:web:66eef18a4eaba9a9bc5ce5",
+        measurementId: "G-TFW57TXCPR"
+      };
+
+      // Inicializa Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const registerForm = document.getElementById("registerForm");
+        const newUsernameInput = document.getElementById("newUsername");
+        const newPasswordInput = document.getElementById("newPassword");
+        const usernameError = document.getElementById("usernameError");
+        const passwordError = document.getElementById("passwordError");
+        const userExists = document.getElementById("userExists");
+        const togglePassword = document.getElementById("togglePassword"); // Añade esto si quieres el toggle en el registro
+
+        registerForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const email = newUsernameInput.value.trim(); // Usar email para el registro en Firebase
+          const password = newPasswordInput.value.trim();
+
+          usernameError.style.display = "none";
+          passwordError.style.display = "none";
+          userExists.style.display = "none";
+
+          if (email === "") {
+            usernameError.style.display = "block";
+            usernameError.textContent = "El correo electrónico es obligatorio";
+            return;
+          }
+
+          if (password === "") {
+            passwordError.style.display = "block";
+            return;
+          }
+
+          try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            // El usuario ha sido registrado exitosamente
+            const firebaseUser = userCredential.user;
+            console.log("Usuario registrado:", firebaseUser);
+            alert("Usuario registrado con éxito.");
+            window.location.href = "ingresar.html"; // Redirigir a la página de inicio de sesión
+          } catch (error) {
+            console.error("Error al registrar usuario:", error);
+            if (error.code === 'auth/email-already-in-use') {
+              userExists.style.display = "block";
+              userExists.textContent = "Este correo electrónico ya está en uso";
+            } else if (error.code === 'auth/invalid-email') {
+              usernameError.style.display = "block";
+              usernameError.textContent = "El formato del correo electrónico no es válido";
+            } else if (error.code === 'auth/weak-password') {
+              passwordError.style.display = "block";
+              passwordError.textContent = "La contraseña debe tener al menos 6 caracteres";
+            } else {
+              alert("Ocurrió un error al registrar el usuario: " + error.message);
+            }
+          }
+        });
+
+        // Opcional: Añadir funcionalidad de mostrar/ocultar contraseña en el registro
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function() {
+                const type = newPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                newPasswordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+      });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="container">
         <h2>Registrar Usuario</h2>
         <form id="registerForm">
             <div class="input-group">
-                <label for="newUsername">Usuario</label>
-                <input type="text" id="newUsername" placeholder="Ingresa tu nuevo usuario" required>
-                <p id="usernameError" class="error-message" style="display:none;">El usuario es obligatorio</p>
-                <p id="userExists" class="error-message" style="display:none;">El usuario ya existe</p>
+                <label for="newUsername">Correo Electrónico</label>
+                <input type="email" id="newUsername" placeholder="Ingresa tu correo electrónico" required>
+                <p id="usernameError" class="error-message" style="display:none;">El correo electrónico es obligatorio</p>
+                <p id="userExists" class="error-message" style="display:none;">Este correo electrónico ya está en uso</p>
             </div>
             <div class="input-group">
                 <label for="newPassword">Contraseña</label>
                 <input type="password" id="newPassword" placeholder="Ingresa tu nueva contraseña" required>
+                <i id="togglePassword" class="fas fa-eye toggle-password"></i>
                 <p id="passwordError" class="error-message" style="display:none;">La contraseña es obligatoria</p>
             </div>
             <button type="submit">Registrar</button>
@@ -28,59 +127,5 @@
             <a href="ingresar.html">¿Ya tienes una cuenta? Inicia sesión</a>
         </div>
     </div>
-
-    <script>
-        // Cargar usuarios del almacenamiento local
-        function loadUsers() {
-            let users = localStorage.getItem("users");
-            return users ? JSON.parse(users) : [];
-        }
-
-        // Guardar usuarios en almacenamiento local
-        function saveUsers(users) {
-            localStorage.setItem("users", JSON.stringify(users));
-        }
-
-        document.getElementById("registerForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-
-            let newUsername = document.getElementById("newUsername").value.trim();
-            let newPassword = document.getElementById("newPassword").value.trim();
-            let usernameError = document.getElementById("usernameError");
-            let passwordError = document.getElementById("passwordError");
-            let userExists = document.getElementById("userExists");
-
-            usernameError.style.display = "none";
-            passwordError.style.display = "none";
-            userExists.style.display = "none";
-
-            if (newUsername === "") {
-                usernameError.style.display = "block";
-                return;
-            }
-
-            if (newPassword === "") {
-                passwordError.style.display = "block";
-                return;
-            }
-
-            let users = loadUsers();
-
-            // Verificar si el nombre de usuario ya está registrado
-            let userAlreadyExists = users.some(user => user.username === newUsername);
-
-            if (userAlreadyExists) {
-                userExists.style.display = "block";
-                return;
-            }
-
-            // Registrar el nuevo usuario
-            users.push({ username: newUsername, password: newPassword });
-            saveUsers(users);
-
-            alert("Usuario registrado con éxito.");
-            window.location.href = "index.html"; // Redirigir al inicio de sesión
-        });
-    </script>
 </body>
 </html>
