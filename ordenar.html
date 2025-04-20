@@ -1,0 +1,200 @@
+<div class="menu-selector">
+    <span class="cerrar-orden" style="position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 1.5em;">&times;</span>
+    <h2>Hamburguesa Doble</h2>
+    <p class="descripcion">Dos hamburguesas + Queso</p>
+    <p class="precio">S/. 15.00</p>
+
+    <div class="opciones-container">
+        <h3>SÁNGUCHES</h3>
+        <p class="instruccion">Seleccione hasta 25 opciones</p>
+        <div class="checkbox-grid">
+            <label><input type="checkbox" name="opcion" value="pan_yema"> Pan Yema</label>
+            <label><input type="checkbox" name="opcion" value="pan_frances"> Pan Francés</label>
+            <label><input type="checkbox" name="opcion" value="lechuga"> Lechuga</label>
+            <label><input type="checkbox" name="opcion" value="tomate"> Tomate</label>
+            <label><input type="checkbox" name="opcion" value="papa_frita"> Papa Frita</label>
+            <label><input type="checkbox" name="opcion" value="papa_hilo"> Papa Hilo</label>
+            <label><input type="checkbox" name="opcion" value="sin_papas"> Sin Papas</label>
+            <label><input type="checkbox" name="opcion" value="mayonesa"> Mayonesa</label>
+            <label><input type="checkbox" name="opcion" value="ketchup"> Ketchup</label>
+            <label><input type="checkbox" name="opcion" value="mostaza"> Mostaza</label>
+            <label><input type="checkbox" name="opcion" value="golf"> Golf</label>
+            <label><input type="checkbox" name="opcion" value="tartara"> Tártara</label>
+        </div>
+    </div>
+
+    <div class="cantidad-agregar">
+        <div class="cantidad">
+            <button class="cantidad-btn">-</button>
+            <input type="number" value="1" min="1" class="cantidad-input">
+            <button class="cantidad-btn">+</button>
+        </div>
+        <button class="agregar-btn">Agregar S/. 15.00</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const botonesCantidad = document.querySelectorAll('.cantidad-btn');
+        const cantidadInput = document.querySelector('.cantidad-input');
+        const agregarBtn = document.querySelector('.agregar-btn');
+        const precioUnitario = 15.00; // El precio base de la hamburguesa doble
+
+        botonesCantidad.forEach(boton => {
+            boton.addEventListener('click', () => {
+                let cantidad = parseInt(cantidadInput.value);
+                if (boton.textContent === '-' && cantidad > 1) {
+                    cantidad--;
+                } else if (boton.textContent === '+') {
+                    cantidad++;
+                }
+                cantidadInput.value = cantidad;
+                actualizarPrecio(cantidad);
+            });
+        });
+
+        cantidadInput.addEventListener('change', () => {
+            let cantidad = parseInt(cantidadInput.value);
+            if (isNaN(cantidad) || cantidad < 1) {
+                cantidad = 1;
+            }
+            cantidadInput.value = cantidad;
+            actualizarPrecio(cantidad);
+        });
+
+        function actualizarPrecio(cantidad) {
+            const precioTotal = precioUnitario * cantidad;
+            agregarBtn.textContent = `Agregar S/. ${precioTotal.toFixed(2)}`;
+        }
+
+        // Aquí podrías agregar la lógica para enviar el pedido
+        agregarBtn.addEventListener('click', () => {
+            const cantidad = parseInt(cantidadInput.value);
+            const opcionesSeleccionadas = Array.from(document.querySelectorAll('input[name="opcion"]:checked'))
+                .map(checkbox => checkbox.value);
+
+            console.log('Cantidad:', cantidad);
+            console.log('Opciones:', opcionesSeleccionadas);
+            alert('Pedido agregado al carrito (funcionalidad de envío no implementada).');
+            // Aquí iría tu código para enviar los datos del pedido al servidor
+        });
+    });
+</script>
+
+
+<style>
+    .menu-selector {
+        background-color: #f9f9f9; /* Un gris claro de fondo */
+        border: 1px solid #ccc; /* Borde sutil */
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        font-family: 'Montserrat', sans-serif; /* Manteniendo la coherencia con tu estilo */
+        color: #333;
+        max-width: 400px; /* Ancho máximo para la ventana */
+        margin: 20px auto; /* Centrar en la página (para ejemplo) */
+        position: relative; /* Para posicionar el botón de cerrar */
+    }
+
+    .menu-selector h2 {
+        color: #2e7d32; /* Un verde similar al encabezado */
+        margin-bottom: 5px;
+    }
+
+    .menu-selector .descripcion {
+        color: #555;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+    }
+
+    .menu-selector .precio {
+        color: #d32f2f; /* Un rojo similar al precio */
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .opciones-container {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .opciones-container h3 {
+        color: #2e7d32;
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+
+    .opciones-container .instruccion {
+        color: #777;
+        font-size: 0.85em;
+        margin-bottom: 10px;
+    }
+
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adaptativo para varias opciones */
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .checkbox-grid label {
+        display: flex;
+        align-items: center;
+        color: #444;
+        font-size: 0.95em;
+        cursor: pointer;
+    }
+
+    .checkbox-grid input[type="checkbox"] {
+        margin-right: 5px;
+    }
+
+    .cantidad-agregar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .cantidad {
+        display: flex;
+        align-items: center;
+    }
+
+    .cantidad-btn {
+        background-color: #f0f0f0;
+        color: #555;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 0 5px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .cantidad-input {
+        width: 40px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        font-size: 1em;
+    }
+
+    .agregar-btn {
+        background-color: #4caf50; /* Un verde similar al botón "Agregar" */
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .agregar-btn:hover {
+        background-color: #45a049;
+    }
+</style>
