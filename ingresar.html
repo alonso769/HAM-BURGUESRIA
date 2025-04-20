@@ -6,20 +6,112 @@
     <title>Iniciar Sesión</title>
     <link rel="shortcut icon" href="img/minilogo.png" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .input-group {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: -10px;
+            top: 70%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+        }
+    </style>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+      // Tu configuración de Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyDfJ0fZ30u3RIWjWBRMCMepSoC9P881K3E",
+        authDomain: "ralph-s-sangucheria.firebaseapp.com",
+        projectId: "ralph-s-sangucheria",
+        storageBucket: "ralph-s-sangucheria.firebasestorage.app",
+        messagingSenderId: "795336985600",
+        appId: "1:795336985600:web:66eef18a4eaba9a9bc5ce5",
+        measurementId: "G-TFW57TXCPR"
+      };
+
+      // Inicializa Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById("loginForm");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const userNotFound = document.getElementById("userNotFound");
+        const passIncorrect = document.getElementById("passIncorrect");
+        const togglePassword = document.getElementById("togglePassword");
+
+        loginForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const email = usernameInput.value.trim(); // Usar email como identificador
+          const password = passwordInput.value.trim();
+
+          userNotFound.style.display = "none";
+          passIncorrect.style.display = "none";
+
+          if (email === "") {
+            document.getElementById("userError").style.display = "block";
+            return;
+          } else {
+            document.getElementById("userError").style.display = "none";
+          }
+
+          if (password === "") {
+            document.getElementById("passError").style.display = "block";
+            return;
+          } else {
+            document.getElementById("passError").style.display = "none";
+          }
+
+          try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            // El usuario ha iniciado sesión correctamente
+            const firebaseUser = userCredential.user;
+            console.log("Usuario autenticado:", firebaseUser);
+            // Redirigir a la página principal
+            window.location.href = "inicio.html";
+          } catch (error) {
+            console.error("Error al iniciar sesión:", error);
+            if (error.code === 'auth/user-not-found') {
+              userNotFound.style.display = "block";
+            } else if (error.code === 'auth/wrong-password') {
+              passIncorrect.style.display = "block";
+            } else {
+              alert("Ocurrió un error al iniciar sesión: " + error.message);
+            }
+          }
+        });
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+      });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="container">
         <h2>Iniciar Sesión</h2>
         <form id="loginForm">
             <div class="input-group">
-                <label for="username">Usuario</label>
-                <input type="text" id="username" placeholder="Ingresa tu usuario">
-                <p id="userError" class="error-message">El usuario es obligatorio</p>
+                <label for="username">Correo Electrónico</label>
+                <input type="text" id="username" placeholder="Ingresa tu correo electrónico">
+                <p id="userError" class="error-message">El correo electrónico es obligatorio</p>
                 <p id="userNotFound" class="error-message" style="display:none;">Usuario no encontrado</p>
             </div>
             <div class="input-group">
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" placeholder="Ingresa tu contraseña">
+                <i id="togglePassword" class="fas fa-eye toggle-password"></i>
                 <p id="passError" class="error-message">La contraseña es obligatoria</p>
                 <p id="passIncorrect" class="error-message" style="display:none;">Contraseña incorrecta</p>
             </div>
@@ -34,78 +126,5 @@
         </div>
         <a href="registrar.html" class="register-link">¿No tienes una cuenta? Regístrate</a>
     </div>
-    <script>
-        // Cargar usuarios del almacenamiento local si existen
-        function loadUsers() {
-            let users = localStorage.getItem("users");
-            return users ? JSON.parse(users) : [];
-        }
-
-        // Guardar usuarios en almacenamiento local
-        function saveUsers(users) {
-            localStorage.setItem("users", JSON.stringify(users));
-        }
-
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-
-            let user = document.getElementById("username");
-            let pass = document.getElementById("password");
-            let userError = document.getElementById("userError");
-            let passError = document.getElementById("passError");
-            let userNotFound = document.getElementById("userNotFound");
-            let passIncorrect = document.getElementById("passIncorrect");
-
-            userError.style.display = "none";
-            passError.style.display = "none";
-            userNotFound.style.display = "none";
-            passIncorrect.style.display = "none";
-
-            let users = loadUsers();
-            let userFound = users.find(u => u.username === user.value.trim());
-
-            if (user.value.trim() === "") {
-                userError.style.display = "block";
-                return;
-            }
-
-            if (!userFound) {
-                userNotFound.style.display = "block";
-                return;
-            }
-
-            if (pass.value.trim() === "") {
-                passError.style.display = "block";
-                return;
-            }
-
-            if (userFound.password !== pass.value.trim()) {
-                passIncorrect.style.display = "block";
-                return;
-            }
-
-            // Si el usuario seleccionó "Recuérdame", guardar los datos en localStorage
-            if (document.getElementById("rememberMe").checked) {
-                localStorage.setItem("currentUser", JSON.stringify(userFound));
-            }
-
-            // Redirigir a la página restaurante.html
-            window.location.href = "restaurante.html";
-        });
-
-        // Opcionalmente, puedes agregar la funcionalidad para que un usuario registre una cuenta, algo como esto:
-        // Este código iría en otro archivo como "usuario.html" o en un formulario de registro adicional.
-        function registerUser(username, password) {
-            let users = loadUsers();
-            let userExists = users.some(u => u.username === username);
-            if (userExists) {
-                alert("Este usuario ya está registrado.");
-                return;
-            }
-            users.push({ username: username, password: password });
-            saveUsers(users);
-            alert("Usuario registrado con éxito.");
-        }
-    </script>
 </body>
 </html>
