@@ -44,6 +44,51 @@ function cargarYMostrarOrden() {
                     console.log(`Producto seleccionado: ${productoSeleccionado}`);
                     // Puedes usar 'productoSeleccionado' para modificar el contenido de 'ordenar.html' dinámicamente si es necesario
 
+                    // Funcionalidad para los botones de "más", "menos" y "agregar"
+                    const botonesCantidad = ordenarContainer.querySelectorAll('.cantidad-btn');
+                    const cantidadInput = ordenarContainer.querySelector('.cantidad-input');
+                    const agregarBtn = ordenarContainer.querySelector('.agregar-btn');
+                    const precioUnitario = 15.00; // El precio base de la hamburguesa doble
+
+                    botonesCantidad.forEach(boton => {
+                        boton.addEventListener('click', () => {
+                            let cantidad = parseInt(cantidadInput.value);
+                            if (boton.dataset.action === 'decrement' && cantidad > 1) {
+                                cantidad--;
+                            } else if (boton.dataset.action === 'increment') {
+                                cantidad++;
+                            }
+                            cantidadInput.value = cantidad;
+                            actualizarPrecio(cantidad);
+                        });
+                    });
+
+                    cantidadInput.addEventListener('change', () => {
+                        let cantidad = parseInt(cantidadInput.value);
+                        if (isNaN(cantidad) || cantidad < 1) {
+                            cantidad = 1;
+                        }
+                        cantidadInput.value = cantidad;
+                        actualizarPrecio(cantidad);
+                    });
+
+                    function actualizarPrecio(cantidad) {
+                        const precioTotal = precioUnitario * cantidad;
+                        agregarBtn.textContent = `Agregar S/. ${precioTotal.toFixed(2)}`;
+                    }
+
+                    // Aquí podrías agregar la lógica para enviar el pedido
+                    agregarBtn.addEventListener('click', () => {
+                        const cantidad = parseInt(cantidadInput.value);
+                        const opcionesSeleccionadas = Array.from(ordenarContainer.querySelectorAll('input[name="opcion"]:checked'))
+                            .map(checkbox => checkbox.value);
+
+                        console.log('Cantidad:', cantidad);
+                        console.log('Opciones:', opcionesSeleccionadas);
+                        alert('Pedido agregado al carrito (funcionalidad de envío no implementada).');
+                        // Aquí iría tu código para enviar los datos del pedido al servidor
+                    });
+
                 } catch (error) {
                     console.error('No se pudo cargar ordenar.html:', error);
                     ordenarContainer.innerHTML = '<p>Error al cargar la página de pedido.</p>';

@@ -6,61 +6,7 @@
     <title>Iniciar Sesión</title>
     <link rel="shortcut icon" href="img/minilogo.png" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .input-group {
-            position: relative;
-        }
-        .toggle-password {
-            position: absolute;
-            right: -10px;
-            top: 70%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            user-select: none;
-        }
-        #resetPasswordContainer {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            color: #010f32;
-            background-color: #f9f9f9;
-        }
-        #resetPasswordContainer label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        #resetPasswordContainer input[type="email"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            box-sizing: border-box;
-        }
-        #resetPasswordContainer button {
-            padding: 10px 15px;
-            background-color: #6b011a7e;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        #resetPasswordContainer button:hover {
-            background-color: #6b0119e3;
-        }
-        #resetPasswordMessage {
-            display: none;
-            margin-top: 10px;
-            color: green;
-        }
-        #resetPasswordError {
-            display: none;
-            margin-top: 10px;
-            color: red;
-        }
-    </style>
+   
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
       import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
@@ -182,19 +128,19 @@
     <div class="container">
         <h2>Iniciar Sesión</h2>
         <form id="loginForm">
-            <div class="input-group">
-                <label for="username">Correo Electrónico</label>
-                <input type="email" id="username" placeholder="Ingresa tu correo electrónico">
-                <p id="userError" class="error-message">El correo electrónico es obligatorio</p>
-                <p id="userNotFound" class="error-message" style="display:none;">Usuario no encontrado</p>
-            </div>
-            <div class="input-group">
-                <label for="password">Contraseña</label>
-                <input type="password" id="password" placeholder="Ingresa tu contraseña">
-                <i id="togglePassword" class="fas fa-eye toggle-password"></i>
-                <p id="passError" class="error-message">La contraseña es obligatoria</p>
-                <p id="passIncorrect" class="error-message" style="display:none;">Contraseña incorrecta</p>
-            </div>
+          <div class="input-group">
+              <label for="username">Correo Electrónico:</label>
+              <input type="email" id="username" placeholder="Ingresa tu correo electrónico">
+              <p id="userError" class="error-message">El correo electrónico es obligatorio</p>
+              <p id="userNotFound" class="error-message">Usuario no encontrado</p>
+          </div>
+          <div class="input-group">
+              <label for="password">Contraseña:</label>
+              <input type="password" id="password" placeholder="Ingresa tu contraseña">
+              <i id="togglePassword" class="fas fa-eye toggle-password"></i>
+              <p id="passError" class="error-message">La contraseña es obligatoria</p>
+              <p id="passIncorrect" class="error-message">Contraseña incorrecta</p>
+          </div>
             <div class="remember-me">
                 <input type="checkbox" id="rememberMe">
                 <label for="rememberMe">Recuérdame</label>
@@ -206,14 +152,7 @@
         </div>
         <a href="registrar.html" class="register-link">¿No tienes una cuenta? Regístrate</a>
 
-        <div id="resetPasswordContainer">
-            <h3>Restablecer Contraseña</h3>
-            <label for="resetPasswordEmail">Correo Electrónico:</label>
-            <input type="email" id="resetPasswordEmail" placeholder="Ingresa tu correo electrónico">
-            <button id="sendResetPassword">Enviar Correo de Restablecimiento</button>
-            <p id="resetPasswordMessage" style="display:none; color: green;">Se ha enviado un correo electrónico para restablecer tu contraseña.</p>
-            <p id="resetPasswordError" style="display:none; color: red;"></p>
-        </div>
+        
     </div>
 </body>
 </html>

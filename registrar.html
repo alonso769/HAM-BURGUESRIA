@@ -107,20 +107,20 @@
 </head>
 <body>
     <div class="container">
-        <h2>Registrar Usuario</h2>
-        <form id="registerForm">
-            <div class="input-group">
-                <label for="newUsername">Correo Electrónico</label>
-                <input type="email" id="newUsername" placeholder="Ingresa tu correo electrónico" required>
-                <p id="usernameError" class="error-message" style="display:none;">El correo electrónico es obligatorio</p>
-                <p id="userExists" class="error-message" style="display:none;">Este correo electrónico ya está en uso</p>
-            </div>
-            <div class="input-group">
-                <label for="newPassword">Contraseña</label>
-                <input type="password" id="newPassword" placeholder="Ingresa tu nueva contraseña" required>
-                <i id="togglePassword" class="fas fa-eye toggle-password"></i>
-                <p id="passwordError" class="error-message" style="display:none;">La contraseña es obligatoria</p>
-            </div>
+      <h2>Registrar Usuario</h2>
+      <form id="registerForm">
+          <div class="input-group">
+              <label for="newUsername">Correo Electrónico</label>
+              <input type="email" id="newUsername" placeholder="Ingresa tu correo electrónico" required>
+              <p id="usernameError" class="error-message">El correo electrónico es obligatorio</p>
+              <p id="userExists" class="error-message">Este correo electrónico ya está en uso</p>
+          </div>
+          <div class="input-group">
+              <label for="newPassword">Contraseña</label>
+              <input type="password" id="newPassword" placeholder="Ingresa tu nueva contraseña" required>
+              <i id="togglePassword" class="fas fa-eye toggle-password"></i>
+              <p id="passwordError" class="error-message">La contraseña es obligatoria</p>
+          </div>
             <button type="submit">Registrar</button>
         </form>
         <div class="options">
