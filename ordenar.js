@@ -6,88 +6,123 @@ function cargarYMostrarOrden() {
 
         botonesOrdenar.forEach(boton => {
             boton.addEventListener('click', async (event) => {
-                event.preventDefault(); // Evita la navegación predeterminada del enlace
+                event.preventDefault();
 
                 try {
-                    const response = await fetch('ordenar.html');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                    const responseOrdenar = await fetch('ordenar.html');
+                    if (!responseOrdenar.ok) {
+                        throw new Error(`HTTP error! status: ${responseOrdenar.status}`);
                     }
-                    const htmlOrden = await response.text();
+                    const htmlOrden = await responseOrdenar.text();
                     ordenarContainer.innerHTML = htmlOrden;
                     ordenarContainer.classList.add('mostrar-ordenar');
                     ordenarBackground.classList.add('mostrar-ordenar');
 
                     // Agregar funcionalidad para cerrar la ventana de ordenar
-                    const botonCerrar = ordenarContainer.querySelector('.cerrar-orden');
-                    if (botonCerrar) {
-                        botonCerrar.addEventListener('click', () => {
-                            ordenarContainer.classList.remove('mostrar-ordenar');
-                            ordenarBackground.classList.remove('mostrar-ordenar');
-                            ordenarContainer.innerHTML = ''; // Limpiar el contenido al cerrar
-                        });
+                    const botonCerrarOrden = ordenarContainer.querySelector('.cerrar-orden');
+                    const cerrarBackgroundOrden = () => {
+                        ordenarContainer.classList.remove('mostrar-ordenar');
+                        ordenarBackground.classList.remove('mostrar-ordenar');
+                        ordenarContainer.innerHTML = '';
+                    };
+
+                    if (botonCerrarOrden) {
+                        botonCerrarOrden.addEventListener('click', cerrarBackgroundOrden);
                     } else {
-                        // Si no hay botón de cerrar, podrías hacer que al hacer clic fuera se cierre
-                        ordenarBackground.addEventListener('click', () => {
-                            ordenarContainer.classList.remove('mostrar-ordenar');
-                            ordenarBackground.classList.remove('mostrar-ordenar');
-                            ordenarContainer.innerHTML = '';
-                        });
-                        // Evitar que el clic dentro del contenedor cierre la ventana inmediatamente
+                        ordenarBackground.addEventListener('click', cerrarBackgroundOrden);
                         ordenarContainer.addEventListener('click', (e) => {
                             e.stopPropagation();
                         });
                     }
 
-                    // Aquí podrías agregar más lógica si necesitas pasar información del producto
-                    const productoSeleccionado = boton.dataset.producto;
-                    console.log(`Producto seleccionado: ${productoSeleccionado}`);
-                    // Puedes usar 'productoSeleccionado' para modificar el contenido de 'ordenar.html' dinámicamente si es necesario
-
-                    // Funcionalidad para los botones de "más", "menos" y "agregar"
-                    const botonesCantidad = ordenarContainer.querySelectorAll('.cantidad-btn');
-                    const cantidadInput = ordenarContainer.querySelector('.cantidad-input');
+                    // Lógica para el botón "Agregar" DENTRO de ordenar.html (cargado dinámicamente)
                     const agregarBtn = ordenarContainer.querySelector('.agregar-btn');
-                    const precioUnitario = 15.00; // El precio base de la hamburguesa doble
+                    const cantidadInput = ordenarContainer.querySelector('.cantidad-input');
+                    const botonesCantidad = ordenarContainer.querySelectorAll('.cantidad-btn');
+                    const precioUnitario = 15.00;
 
-                    botonesCantidad.forEach(boton => {
-                        boton.addEventListener('click', () => {
+                    if (agregarBtn && cantidadInput && botonesCantidad.length > 0) {
+                        botonesCantidad.forEach(boton => {
+                            boton.addEventListener('click', () => {
+                                let cantidad = parseInt(cantidadInput.value);
+                                if (boton.dataset.action === 'decrement' && cantidad > 1) {
+                                    cantidad--;
+                                } else if (boton.dataset.action === 'increment') {
+                                    cantidad++;
+                                }
+                                cantidadInput.value = cantidad;
+                                actualizarPrecio(cantidad);
+                            });
+                        });
+
+                        cantidadInput.addEventListener('change', () => {
                             let cantidad = parseInt(cantidadInput.value);
-                            if (boton.dataset.action === 'decrement' && cantidad > 1) {
-                                cantidad--;
-                            } else if (boton.dataset.action === 'increment') {
-                                cantidad++;
+                            if (isNaN(cantidad) || cantidad < 1) {
+                                cantidad = 1;
                             }
                             cantidadInput.value = cantidad;
                             actualizarPrecio(cantidad);
                         });
-                    });
 
-                    cantidadInput.addEventListener('change', () => {
-                        let cantidad = parseInt(cantidadInput.value);
-                        if (isNaN(cantidad) || cantidad < 1) {
-                            cantidad = 1;
+                        function actualizarPrecio(cantidad) {
+                            const precioTotal = precioUnitario * cantidad;
+                            agregarBtn.textContent = `Agregar S/. ${precioTotal.toFixed(2)}`;
                         }
-                        cantidadInput.value = cantidad;
-                        actualizarPrecio(cantidad);
-                    });
 
-                    function actualizarPrecio(cantidad) {
-                        const precioTotal = precioUnitario * cantidad;
-                        agregarBtn.textContent = `Agregar S/. ${precioTotal.toFixed(2)}`;
+                        agregarBtn.addEventListener('click', () => {
+                            const cantidad = parseInt(cantidadInput.value);
+                            const opcionesSeleccionadas = Array.from(ordenarContainer.querySelectorAll('input[name="opcion"]:checked'))
+                                .map(checkbox => checkbox.value);
+
+                            console.log('Cantidad:', cantidad);
+                            console.log('Opciones:', opcionesSeleccionadas);
+
+                            // Ocultar la ventana de ordenar temporalmente
+                            ordenarContainer.style.display = 'none';
+
+                            // Crear el cuadro de confirmación dinámicamente
+                            const confirmacionDiv = document.createElement('div');
+                            confirmacionDiv.classList.add('confirmacion-pedido');
+                            confirmacionDiv.innerHTML = `
+                                <h3>Confirmación de Pedido</h3>
+                                <p>Cantidad: ${cantidad}</p>
+                                <p>Opciones: ${opcionesSeleccionadas.join(', ')}</p>
+                                <button id="confirmar-pedido-btn">Confirmar Pedido</button>
+                                <button id="cancelar-pedido-btn">Cancelar</button>
+                            `;
+                            ordenarContainer.appendChild(confirmacionDiv);
+
+                            const confirmarPedidoBtn = document.getElementById('confirmar-pedido-btn');
+                            const cancelarPedidoBtn = document.getElementById('cancelar-pedido-btn');
+
+                            cancelarPedidoBtn.addEventListener('click', () => {
+                                ordenarContainer.removeChild(confirmacionDiv);
+                                ordenarContainer.style.display = 'block'; // Mostrar de nuevo la ventana de ordenar
+                            });
+
+                            confirmarPedidoBtn.addEventListener('click', () => {
+                                ordenarContainer.removeChild(confirmacionDiv);
+
+                                // Crear el cuadro de selección de medio de pago
+                                const pagoDiv = document.createElement('div');
+                                pagoDiv.classList.add('seleccion-pago');
+                                pagoDiv.innerHTML = `
+                                    <h3>Escoge tu medio de pago</h3>
+                                    <button>Tarjeta de Crédito</button>
+                                    <button>Tarjeta de Débito</button>
+                                    <button>Efectivo</button>
+                                    <button id="cancelar-pago-btn">Cancelar</button>
+                                `;
+                                ordenarContainer.appendChild(pagoDiv);
+
+                                const cancelarPagoBtn = document.getElementById('cancelar-pago-btn');
+                                cancelarPagoBtn.addEventListener('click', () => {
+                                    ordenarContainer.removeChild(pagoDiv);
+                                    ordenarContainer.style.display = 'block'; // Mostrar de nuevo la ventana de ordenar
+                                });
+                            });
+                        });
                     }
-
-                    // Aquí podrías agregar la lógica para enviar el pedido
-                    agregarBtn.addEventListener('click', () => {
-                        const cantidad = parseInt(cantidadInput.value);
-                        const opcionesSeleccionadas = Array.from(ordenarContainer.querySelectorAll('input[name="opcion"]:checked'))
-                            .map(checkbox => checkbox.value);
-
-                        console.log('Cantidad:', cantidad);
-                        console.log('Opciones:', opcionesSeleccionadas);
-                        alert('Pedido agregado al carrito (funcionalidad de envío no implementada).');
-                        // Aquí iría tu código para enviar los datos del pedido al servidor
-                    });
 
                 } catch (error) {
                     console.error('No se pudo cargar ordenar.html:', error);
@@ -97,8 +132,7 @@ function cargarYMostrarOrden() {
                 }
             });
         });
-    });
+    }
 }
 
-// Llama a la función para que se ejecute
 cargarYMostrarOrden();

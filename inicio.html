@@ -52,7 +52,7 @@
                     <h3>Sánguche Clásico</h3>
                     <p>Pan artesanal, carne jugosa, lechuga fresca, tomate y nuestra salsa especial.</p>
                     <span class="price">S/. 15.90</span>
-                    <a href="ordenar.html" class="btn">Ordenar</a>
+                    <a href="#" class="btn btn-ordenar" data-producto="clasico" data-precio="15.90" data-nombre="Sánguche Clásico">Ordenar</a>
                 </div>
             </div>
             <div class="product-card">
@@ -63,7 +63,7 @@
                     <h3>Sánguche Especial</h3>
                     <p>Doble carne, queso cheddar, tocino crujiente, cebolla caramelizada y salsa BBQ.</p>
                     <span class="price">S/. 22.90</span>
-                    <a href="ordenar.html" class="btn">Ordenar</a>
+                    <a href="#" class="btn btn-ordenar" data-producto="especial" data-precio="22.90" data-nombre="Sánguche Especial">Ordenar</a>
                 </div>
             </div>
             <div class="product-card">
@@ -74,7 +74,7 @@
                     <h3>Sánguche Vegetariano</h3>
                     <p>Hamburguesa de lentejas, aguacate, rúcula, tomate y mayonesa de hierbas.</p>
                     <span class="price">S/. 18.90</span>
-                    <a href="ordenar.html" class="btn">Ordenar</a>
+                    <a href="#" class="btn btn-ordenar" data-producto="vegetariano" data-precio="18.90" data-nombre="Sánguche Vegetariano">Ordenar</a>
                 </div>
             </div>
             <div class="product-card">
@@ -85,7 +85,7 @@
                     <h3>Papas Ralph's</h3>
                     <p>Papas fritas crujientes con queso cheddar derretido, tocino y cebolla verde.</p>
                     <span class="price">S/. 12.90</span>
-                    <a href="ordenar.html" class="btn">Ordenar</a>
+                    <a href="#" class="btn btn-ordenar" data-producto="papas" data-precio="12.90" data-nombre="Papas Ralph's">Ordenar</a>
                 </div>
             </div>
         </div>
@@ -217,114 +217,336 @@
         </div>
     </footer>
 
-    <div id="ordenar-container" class="ordenar-oculto">
+    <div id="ordenar-container" class="ordenar-container">
     </div>
-
-    <div id="ordenar-background" class="ordenar-oculto"></div>
-
-    <section class="about-section" id="nosotros">
-    </section>
-
-    <script>
-    // Mobile Menu Toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navMenu = document.querySelector('.nav-menu');
-
-    mobileMenuBtn.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-    });
-
-    // Smooth Scrolling for Anchor Links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 100,
-                    behavior: 'smooth'
-                });
-
-                // Close mobile menu if open
-                if (navMenu.classList.contains('active')) {
-                    navMenu.classList.remove('active');
-                }
-            }
-        });
-    });
-
-    // Efecto de desvanecimiento de la barra de navegación al hacer scroll
-    const header = document.querySelector('header');
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) { // Ajusta este valor para determinar cuándo se activa el efecto
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+    <div id="ordenar-background" class="ordenar-background"></div>
+    <div id="confirmar-pedido-container" class="confirmar-pedido-container">
+    </div>
+    <style>
+        /* Estilos para los contenedores */
+        .ordenar-container {
+            position: fixed; /* O absolute según tu layout */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            display: none; /* Oculto por defecto */
+            font-family: 'Montserrat', sans-serif; /* Añade la fuente si la usas */
         }
-    });
 
-    // Nuevo código para cargar y mostrar la ventana de ordenar
-    document.addEventListener('DOMContentLoaded', () => {
-        const botonesOrdenar = document.querySelectorAll('.btn'); // Selecciona todos los botones con la clase 'btn'
-        const ordenarContainer = document.getElementById('ordenar-container');
-        const ordenarBackground = document.getElementById('ordenar-background');
+        .ordenar-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none; /* Oculto por defecto */
+        }
 
-        botonesOrdenar.forEach(boton => {
-            // Asegúrate de que solo los botones "Ordenar" de los productos activen esto
-            if (boton.textContent.trim() === 'Ordenar') {
-                boton.addEventListener('click', async (event) => {
-                    event.preventDefault(); // Evita la navegación predeterminada del enlace
+        .mostrar-ordenar {
+            display: block !important;
+        }
 
-                    try {
-                        const response = await fetch('ordenar.html');
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        const htmlOrden = await response.text();
-                        ordenarContainer.innerHTML = htmlOrden;
-                        ordenarContainer.classList.add('mostrar-ordenar');
-                        ordenarBackground.classList.add('mostrar-ordenar');
+        .confirmar-pedido-container {
+            position: fixed; /* O absolute según tu layout */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1002; /* Mayor que ordenar-container y background */
+            display: none; /* Oculto por defecto */
+            font-family: 'Montserrat', sans-serif; /* Añade la fuente si la usas */
+            text-align: center; /* Centrar contenido del formulario */
+        }
 
-                        // Agregar funcionalidad para cerrar la ventana de ordenar
-                        const botonCerrar = ordenarContainer.querySelector('.cerrar-orden');
-                        if (botonCerrar) {
-                            botonCerrar.addEventListener('click', () => {
-                                ordenarContainer.classList.remove('mostrar-ordenar');
-                                ordenarBackground.classList.remove('mostrar-ordenar');
-                                ordenarContainer.innerHTML = ''; // Limpiar el contenido al cerrar
-                            });
-                        } else {
-                            // Si no hay botón de cerrar, podrías hacer que al hacer clic fuera se cierre
-                            ordenarBackground.addEventListener('click', () => {
-                                ordenarContainer.classList.remove('mostrar-ordenar');
-                                ordenarBackground.classList.remove('mostrar-ordenar');
-                                ordenarContainer.innerHTML = '';
-                            });
-                            // Evitar que el clic dentro del contenedor cierre la ventana inmediatamente
-                            ordenarContainer.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                            });
-                        }
+        /* Estilos para el contenido DENTRO del contenedor de confirmar pedido */
+        .confirmar-pedido-container h2 {
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 15px;
+        }
 
-                        // Aquí podrías agregar más lógica si necesitas pasar información del producto
-                        const productoSeleccionado = boton.previousElementSibling.textContent.trim(); // Obtiene el nombre del producto del elemento hermano anterior (ajusta esto según tu estructura HTML real)
-                        console.log(`Producto seleccionado: ${productoSeleccionado}`);
-                        // Puedes usar 'productoSeleccionado' para modificar el contenido de 'ordenar.html' dinámicamente si es necesario
+        .confirmar-pedido-container .resumen-pedido {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            text-align: left; /* Alinear texto del resumen a la izquierda */
+        }
 
-                    } catch (error) {
-                        console.error('No se pudo cargar ordenar.html:', error);
-                        ordenarContainer.innerHTML = '<p>Error al cargar la página de pedido.</p>';
-                        ordenarContainer.classList.add('mostrar-ordenar');
-                        ordenarBackground.classList.add('mostrar-ordenar');
+        .confirmar-pedido-container .resumen-pedido h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .confirmar-pedido-container .resumen-pedido p {
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .confirmar-pedido-container .total-pedido {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #d32f2f;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .confirmar-pedido-container label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+            text-align: left; /* Alinear etiquetas a la izquierda */
+        }
+
+        .confirmar-pedido-container input[type="text"],
+        .confirmar-pedido-container input[type="tel"],
+        .confirmar-pedido-container select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        .confirmar-pedido-container button[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .confirmar-pedido-container button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .mostrar-confirmar {
+            display: block !important;
+        }
+    </style>
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.querySelector('.nav-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu if open
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
                     }
-                });
+                }
+            });
+        });
+
+        // Efecto de desvanecimiento de la barra de navegación al hacer scroll
+        const header = document.querySelector('header');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { // Ajusta este valor para determinar cuándo se activa el efecto
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
         });
-    });
+
+        function cargarYMostrarOrden() {
+            document.addEventListener('DOMContentLoaded', () => {
+                const botonesOrdenar = document.querySelectorAll('.btn-ordenar');
+                const ordenarContainer = document.getElementById('ordenar-container');
+                const ordenarBackground = document.getElementById('ordenar-background');
+                const confirmarPedidoContainer = document.getElementById('confirmar-pedido-container');
+
+                botonesOrdenar.forEach(boton => {
+                    boton.addEventListener('click', async (event) => {
+                        event.preventDefault();
+                        const productoNombre = boton.dataset.nombre;
+                        const productoPrecio = parseFloat(boton.dataset.precio);
+
+                        try {
+                            const responseOrdenar = await fetch('ordenar.html');
+                            if (!responseOrdenar.ok) {
+                                throw new Error(`HTTP error! status: ${responseOrdenar.status}`);
+                            }
+                            const htmlOrden = await responseOrdenar.text();
+                            ordenarContainer.innerHTML = htmlOrden;
+                            ordenarContainer.classList.add('mostrar-ordenar');
+                            ordenarBackground.classList.add('mostrar-ordenar');
+
+                            // Actualizar el título y precio del menú dinámicamente
+                            const tituloOrden = ordenarContainer.querySelector('h2');
+                            const precioOrden = ordenarContainer.querySelector('.precio');
+                            const agregarBtn = ordenarContainer.querySelector('.agregar-btn');
+
+                            if (tituloOrden) {
+                                tituloOrden.textContent = productoNombre;
+                            }
+                            if (precioOrden) {
+                                precioOrden.textContent = `S/. ${productoPrecio.toFixed(2)}`;
+                            }
+                            if (agregarBtn) {
+                                agregarBtn.textContent = `Agregar S/. ${productoPrecio.toFixed(2)}`;
+                                agregarBtn.dataset.precioUnitario = productoPrecio; // Almacenar precio unitario
+                            }
+
+                            // Agregar funcionalidad para cerrar la ventana de ordenar
+                            const botonCerrarOrden = ordenarContainer.querySelector('.cerrar-orden');
+                            if (botonCerrarOrden) {
+                                botonCerrarOrden.addEventListener('click', () => {
+                                    ordenarContainer.classList.remove('mostrar-ordenar');
+                                    ordenarBackground.classList.remove('mostrar-ordenar');
+                                    ordenarContainer.innerHTML = '';
+                                    confirmarPedidoContainer.classList.remove('mostrar-confirmar');
+                                    confirmarPedidoContainer.innerHTML = '';
+                                });
+                            } else {
+                                ordenarBackground.addEventListener('click', () => {
+                                    ordenarContainer.classList.remove('mostrar-ordenar');
+                                    ordenarBackground.classList.remove('mostrar-ordenar');
+                                    ordenarContainer.innerHTML = '';
+                                    confirmarPedidoContainer.classList.remove('mostrar-confirmar');
+                                    confirmarPedidoContainer.innerHTML = '';
+                                });
+                                ordenarContainer.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                });
+                            }
+
+                            // Lógica para el botón "Agregar" DENTRO de ordenar.html (cargado dinámicamente)
+                            const agregarBtnDentro = ordenarContainer.querySelector('.agregar-btn');
+                            const cantidadInput = ordenarContainer.querySelector('.cantidad-input');
+                            const botonesCantidad = ordenarContainer.querySelectorAll('.cantidad-btn');
+
+                            if (agregarBtnDentro && cantidadInput && botonesCantidad.length > 0) {
+                                botonesCantidad.forEach(botonCantidad => {
+                                    botonCantidad.addEventListener('click', () => {
+                                        let cantidad = parseInt(cantidadInput.value);
+                                        if (botonCantidad.dataset.action === 'decrement' && cantidad > 1) {
+                                            cantidad--;
+                                        } else if (botonCantidad.dataset.action === 'increment') {
+                                            cantidad++;
+                                        }
+                                        cantidadInput.value = cantidad;
+                                        actualizarPrecioOrden(cantidad, agregarBtnDentro.dataset.precioUnitario, agregarBtnDentro);
+                                    });
+                                });
+
+                                cantidadInput.addEventListener('change', () => {
+                                    let cantidad = parseInt(cantidadInput.value);
+                                    if (isNaN(cantidad) || cantidad < 1) {
+                                        cantidad = 1;
+                                    }
+                                    cantidadInput.value = cantidad;
+                                    actualizarPrecioOrden(cantidad, agregarBtnDentro.dataset.precioUnitario, agregarBtnDentro);
+                                });
+
+                                function actualizarPrecioOrden(cantidad, precioUnitario, botonAgregar) {
+                                    const precioTotal = parseFloat(precioUnitario) * cantidad;
+                                    botonAgregar.textContent = `Agregar S/. ${precioTotal.toFixed(2)}`;
+                                }
+
+                                agregarBtnDentro.addEventListener('click', () => {
+                                    const cantidad = parseInt(cantidadInput.value);
+                                    const opcionesSeleccionadas = Array.from(ordenarContainer.querySelectorAll('input[name="opcion"]:checked'))
+                                        .map(checkbox => checkbox.value);
+
+                                    ordenarContainer.classList.remove('mostrar-ordenar');
+                                    ordenarBackground.classList.remove('mostrar-ordenar');
+                                    ordenarContainer.innerHTML = '';
+
+                                    mostrarConfirmarPedido(productoNombre, cantidad, productoPrecio, opcionesSeleccionadas);
+                                });
+                            }
+
+                        } catch (error) {
+                            console.error('No se pudo cargar ordenar.html:', error);
+                            ordenarContainer.innerHTML = '<p>Error al cargar la página de pedido.</p>';
+                            ordenarContainer.classList.add('mostrar-ordenar');
+                            ordenarBackground.classList.add('mostrar-ordenar');
+                        }
+                    });
+                });
+            });
+        }
+
+        function mostrarConfirmarPedido(nombreProducto, cantidad, precioUnitario, opciones) {
+            const confirmarPedidoContainer = document.getElementById('confirmar-pedido-container');
+            const precioTotal = parseFloat(precioUnitario) * cantidad;
+            confirmarPedidoContainer.innerHTML = `
+                <h2>Confirmar Pedido</h2>
+                <div class="resumen-pedido">
+                    <h3>Resumen</h3>
+                    <p>Producto: ${nombreProducto}</p>
+                    <p>Cantidad: ${cantidad}</p>
+                    ${opciones.length > 0 ? `<p>Opciones: ${opciones.join(', ')}</p>` : '<p>Sin opciones adicionales.</p>'}
+                    <p class="total-pedido">Total: S/. ${precioTotal.toFixed(2)}</p>
+                </div>
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Tu nombre">
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" placeholder="Tu número de teléfono">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" placeholder="Tu dirección">
+                <button type="submit">Confirmar Pedido</button>
+            `;
+            confirmarPedidoContainer.classList.add('mostrar-confirmar');
+            document.getElementById('ordenar-background').classList.add('mostrar-ordenar');
+
+            const backgroundCerrarConfirmar = document.getElementById('ordenar-background');
+            backgroundCerrarConfirmar.addEventListener('click', () => {
+                confirmarPedidoContainer.classList.remove('mostrar-confirmar');
+                backgroundCerrarConfirmar.classList.remove('mostrar-ordenar');
+                confirmarPedidoContainer.innerHTML = '';
+            });
+
+            const confirmarPedidoForm = confirmarPedidoContainer.querySelector('button[type="submit"]');
+            if (confirmarPedidoForm) {
+                confirmarPedidoForm.addEventListener('click', () => {
+                    alert(`Pedido confirmado por S/. ${precioTotal.toFixed(2)}. ¡Gracias por tu compra!`);
+                    confirmarPedidoContainer.classList.remove('mostrar-confirmar');
+                    backgroundCerrarConfirmar.classList.remove('mostrar-ordenar');
+                    confirmarPedidoContainer.innerHTML = '';
+                    // Aquí puedes agregar la lógica para enviar el pedido al servidor
+                });
+            }
+        }
+
+        cargarYMostrarOrden();
     </script>
 </body>
 </html>
