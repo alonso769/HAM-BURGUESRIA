@@ -6,10 +6,10 @@
     <title>Iniciar Sesión</title>
     <link rel="shortcut icon" href="img/minilogo.png" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
-   
+    
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-      import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js"; // sendPasswordResetEmail ya no es necesario aquí
 
       // Tu configuración de Firebase
       const firebaseConfig = {
@@ -33,12 +33,7 @@
         const userNotFound = document.getElementById("userNotFound");
         const passIncorrect = document.getElementById("passIncorrect");
         const togglePassword = document.getElementById("togglePassword");
-        const forgotPasswordLink = document.querySelector(".options a");
-        const resetPasswordContainer = document.getElementById("resetPasswordContainer");
-        const resetPasswordEmailInput = document.getElementById("resetPasswordEmail");
-        const sendResetPasswordButton = document.getElementById("sendResetPassword");
-        const resetPasswordMessage = document.getElementById("resetPasswordMessage");
-        const resetPasswordError = document.getElementById("resetPasswordError");
+        // const forgotPasswordLink = document.querySelector(".options a"); // Ya no es necesario un listener aquí
 
         loginForm.addEventListener("submit", async (event) => {
           event.preventDefault();
@@ -48,19 +43,17 @@
 
           userNotFound.style.display = "none";
           passIncorrect.style.display = "none";
+          document.getElementById("userError").style.display = "none"; // Limpiar error de usuario
+          document.getElementById("passError").style.display = "none"; // Limpiar error de contraseña
 
           if (email === "") {
             document.getElementById("userError").style.display = "block";
             return;
-          } else {
-            document.getElementById("userError").style.display = "none";
           }
 
           if (password === "") {
             document.getElementById("passError").style.display = "block";
             return;
-          } else {
-            document.getElementById("passError").style.display = "none";
           }
 
           try {
@@ -88,38 +81,10 @@
                 this.classList.toggle('fa-eye-slash');
             });
         }
+        
+        // Ya no necesitas un event listener para forgotPasswordLink aquí,
+        // ya que el enlace ahora apunta directamente a otro HTML.
 
-        forgotPasswordLink.addEventListener('click', function(event) {
-            event.preventDefault();
-            loginForm.style.display = "none";
-            resetPasswordContainer.style.display = "block";
-            resetPasswordMessage.style.display = "none";
-            resetPasswordError.style.display = "none";
-        });
-
-        sendResetPasswordButton.addEventListener('click', async function() {
-            const email = resetPasswordEmailInput.value.trim();
-
-            if (email === "") {
-                resetPasswordError.textContent = "Por favor, ingresa tu correo electrónico.";
-                resetPasswordError.style.display = "block";
-                return;
-            }
-
-            try {
-                await sendPasswordResetEmail(auth, email);
-                resetPasswordMessage.textContent = "Se ha enviado un correo electrónico para restablecer tu contraseña. Revisa tu bandeja de entrada (y la carpeta de spam).";
-                resetPasswordMessage.style.display = "block";
-                resetPasswordError.style.display = "none";
-                resetPasswordContainer.style.display = "none";
-                loginForm.style.display = "block"; // Optionally go back to login form
-            } catch (error) {
-                console.error("Error al enviar correo de restablecimiento:", error);
-                resetPasswordError.textContent = "Ocurrió un error al enviar el correo electrónico: " + error.message;
-                resetPasswordError.style.display = "block";
-                resetPasswordMessage.style.display = "none";
-            }
-        });
       });
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -136,8 +101,10 @@
           </div>
           <div class="input-group">
               <label for="password">Contraseña:</label>
-              <input type="password" id="password" placeholder="Ingresa tu contraseña">
-              <i id="togglePassword" class="fas fa-eye toggle-password"></i>
+              <div class="password-input">
+                  <input type="password" id="password" placeholder="Ingresa tu contraseña">
+                  <i id="togglePassword" class="fas fa-eye toggle-password"></i>
+              </div>
               <p id="passError" class="error-message">La contraseña es obligatoria</p>
               <p id="passIncorrect" class="error-message">Contraseña incorrecta</p>
           </div>
@@ -148,11 +115,8 @@
             <button type="submit">Ingresar</button>
         </form>
         <div class="options">
-            <a href="#">¿Olvidaste tu contraseña?</a>
-        </div>
+            <a href="recuperar_contrasena.html">¿Olvidaste tu contraseña?</a> </div>
         <a href="registrar.html" class="register-link">¿No tienes una cuenta? Regístrate</a>
-
-        
     </div>
 </body>
 </html>

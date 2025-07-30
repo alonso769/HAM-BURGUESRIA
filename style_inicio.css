@@ -561,15 +561,6 @@
     display: block !important;
 }
 
-/*estilos ordenar/*/
-
-
-
-
-
-/* style_inicio.css */
-/* ... tus estilos existentes ... */
-
 #ordenar-container {
     position: fixed; /* Para que se quede en la ventana al hacer scroll */
     top: 50%;

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Colosal</title>
+    <link rel="shortcut icon" href="img/minilogo.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css"> <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+      import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+      // Tu configuración de Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyDfJ0fZ30u3RIWjWBRMCMepSoC9P881K3E",
+        authDomain: "ralph-s-sangucheria.firebaseapp.com",
+        projectId: "ralph-s-sangucheria",
+        storageBucket: "ralph-s-sangucheria.firebasestorage.app",
+        messagingSenderId: "795336985600",
+        appId: "1:795336985600:web:66eef18a4eaba9a9bc5ce5",
+        measurementId: "G-TFW57TXCPR"
+      };
+
+      // Inicializa Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const resetPasswordForm = document.getElementById("resetPasswordForm");
+        const emailInput = document.getElementById("resetPasswordEmail");
+        const resetMessage = document.getElementById("resetMessage");
+        const errorMessage = document.getElementById("errorMessage");
+        const emailError = document.getElementById("emailError"); // Para validación de campo vacío
+
+        resetPasswordForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const email = emailInput.value.trim();
+
+          // Limpiar mensajes anteriores
+          resetMessage.style.display = "none";
+          errorMessage.style.display = "none";
+          emailError.style.display = "none";
+
+          if (email === "") {
+            emailError.textContent = "Por favor, ingresa tu correo electrónico.";
+            emailError.style.display = "block";
+            return;
+          }
+
+          try {
+            await sendPasswordResetEmail(auth, email);
+            resetMessage.textContent = "Se ha enviado un correo electrónico para restablecer tu contraseña. Revisa tu bandeja de entrada (y la carpeta de spam).";
+            resetMessage.style.display = "block";
+          } catch (error) {
+            console.error("Error al enviar correo de restablecimiento:", error);
+            let displayError = "Ocurrió un error al enviar el correo electrónico.";
+            if (error.code === 'auth/invalid-email') {
+                displayError = "El formato del correo electrónico es inválido.";
+            } else if (error.code === 'auth/user-not-found') {
+                displayError = "No hay un usuario registrado con ese correo electrónico.";
+            }
+            errorMessage.textContent = displayError;
+            errorMessage.style.display = "block";
+          }
+        });
+      });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Recuperar Contraseña</h2>
+        <form id="resetPasswordForm">
+            <div class="input-group">
+                <label for="resetPasswordEmail">Correo Electrónico:</label>
+                <input type="email" id="resetPasswordEmail" placeholder="Ingresa tu correo electrónico">
+                <p id="emailError" class="error-message"></p>
+            </div>
+            <button type="submit" id="sendResetPassword">Enviar Enlace de Restablecimiento</button>
+            <p id="resetMessage" class="success-message"></p>
+            <p id="errorMessage" class="error-message"></p>
+        </form>
+        <a href="ingresar.html" class="back-to-login-link">Volver al Inicio de Sesión</a>
+    </div>
+</body>
+</html>

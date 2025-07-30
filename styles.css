@@ -144,3 +144,18 @@ a:hover {
     user-select: none;
     margin-top: 5px;
 }
+
+.password-input {
+    display: flex;
+    align-items: center;
+}
+
+.password-input input {
+    flex-grow: 1;
+}
+
+.password-input .toggle-password {
+    margin-left: 10px;
+    cursor: pointer;
+}
+

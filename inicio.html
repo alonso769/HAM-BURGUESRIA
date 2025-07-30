@@ -25,6 +25,10 @@
                 <li><a href="#locales">Locales</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
+            <div class="cart-icon-container">
+                <i class="fas fa-shopping-cart" id="cart-icon"></i>
+                <span id="cart-count" class="cart-count">0</span>
+            </div>
             <div class="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
             </div>
@@ -52,7 +56,7 @@
                     <h3>Sánguche Clásico</h3>
                     <p>Pan artesanal, carne jugosa, lechuga fresca, tomate y nuestra salsa especial.</p>
                     <span class="price">S/. 15.90</span>
-                    <a href="#" class="btn btn-ordenar" data-producto="clasico" data-precio="15.90" data-nombre="Sánguche Clásico">Ordenar</a>
+                    <a href="#" class="btn btn-ordenar" data-producto="clasico" data-precio="15.90" data-nombre="Sánguche Clásico" data-descripcion="Pan artesanal, carne jugosa, lechuga fresca, tomate y nuestra salsa especial.">Ordenar</a>
                 </div>
             </div>
             <div class="product-card">
@@ -63,7 +67,7 @@
                     <h3>Sánguche Especial</h3>
                     <p>Doble carne, queso cheddar, tocino crujiente, cebolla caramelizada y salsa BBQ.</p>
                     <span class="price">S/. 22.90</span>
-                    <a href="#" class="btn btn-ordenar" data-producto="especial" data-precio="22.90" data-nombre="Sánguche Especial">Ordenar</a>
+                    <a href="#" class="btn btn-ordenar" data-producto="especial" data-precio="22.90" data-nombre="Sánguche Especial" data-descripcion="Doble carne, queso cheddar, tocino crujiente, cebolla caramelizada y salsa BBQ.">Ordenar</a>
                 </div>
             </div>
             <div class="product-card">
@@ -74,7 +78,7 @@
                     <h3>Sánguche Vegetariano</h3>
                     <p>Hamburguesa de lentejas, aguacate, rúcula, tomate y mayonesa de hierbas.</p>
                     <span class="price">S/. 18.90</span>
-                    <a href="#" class="btn btn-ordenar" data-producto="vegetariano" data-precio="18.90" data-nombre="Sánguche Vegetariano">Ordenar</a>
+                    <a href="#" class="btn btn-ordenar" data-producto="vegetariano" data-precio="18.90" data-nombre="Sánguche Vegetariano" data-descripcion="Hamburguesa de lentejas, aguacate, rúcula, tomate y mayonesa de hierbas.">Ordenar</a>
                 </div>
             </div>
             <div class="product-card">
@@ -85,7 +89,7 @@
                     <h3>Papas Ralph's</h3>
                     <p>Papas fritas crujientes con queso cheddar derretido, tocino y cebolla verde.</p>
                     <span class="price">S/. 12.90</span>
-                    <a href="#" class="btn btn-ordenar" data-producto="papas" data-precio="12.90" data-nombre="Papas Ralph's">Ordenar</a>
+                    <a href="#" class="btn btn-ordenar" data-producto="papas" data-precio="12.90" data-nombre="Papas Ralph's" data-descripcion="Papas fritas crujientes con queso cheddar derretido, tocino y cebolla verde.">Ordenar</a>
                 </div>
             </div>
         </div>
@@ -211,34 +215,69 @@
                     </a>
                 </div>
             </div>
-            <div class="copyright">
-                <p>&copy; 2025 Ralph's Sanguchería. Todos los derechos reservados.</p>
-            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Ralph's Sanguchería. Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <div id="ordenar-container" class="ordenar-container">
-    </div>
-    <div id="ordenar-background" class="ordenar-background"></div>
+        </div>
+    <div id="cart-modal-container" class="cart-modal-container">
+        </div>
     <div id="confirmar-pedido-container" class="confirmar-pedido-container">
-    </div>
+        </div>
+    <div id="seleccion-pago-container" class="seleccion-pago-container">
+        </div>
+    <div id="overlay" class="overlay"></div> 
     <style>
-        /* Estilos para los contenedores */
-        .ordenar-container {
-            position: fixed; /* O absolute según tu layout */
+        /* Estilos generales de los modales */
+        .ordenar-container, .confirmar-pedido-container, .seleccion-pago-container {
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: white;
+            background-color: white; /* Mantener fondo blanco para estos */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
+            z-index: 1002;
             display: none; /* Oculto por defecto */
-            font-family: 'Montserrat', sans-serif; /* Añade la fuente si la usas */
+            font-family: 'Montserrat', sans-serif;
+            max-width: 450px; /* Ancho máximo para el modal de ordenar/carrito */
+            width: 90%; /* Ancho responsivo */
+            box-sizing: border-box;
+            overflow-y: auto; /* Para desplazamiento si el contenido es largo */
+            max-height: 90vh; /* Altura máxima para el modal */
+            /* Asegurarse de que no tengan estilos laterales que entren en conflicto */
+            right: auto;
         }
 
-        .ordenar-background {
+        /* --- ESTILOS DEL CARRITO LATERAL DERECHO --- */
+        .cart-modal-container {
+            position: fixed;
+            top: 0; /* Alineado a la parte superior */
+            right: -400px; /* Inicialmente fuera de la pantalla (ajusta el ancho según tu necesidad) */
+            width: 400px; /* Ancho del panel del carrito. Puedes ajustar este valor. */
+            height: 100%; /* Abarca toda la altura de la pantalla */
+            background-color: #ca1334; /* Fondo rojo (Ralph's Sanguchería Color) */
+            padding: 20px;
+            box-shadow: -4px 0 8px rgba(0, 0, 0, 0.2);
+            z-index: 1002;
+            display: flex; /* Usar flexbox para organizar el contenido */
+            flex-direction: column; /* Apilar elementos verticalmente */
+            transition: right 0.4s ease-out; /* Transición suave para que "entre" y "salga" */
+            font-family: 'Montserrat', sans-serif;
+            color: white; /* Color de texto para que contraste con el fondo rojo */
+            box-sizing: border-box; /* Incluye padding en el ancho */
+            overflow-y: auto; /* Para desplazamiento si el contenido es largo */
+        }
+
+        .cart-modal-container.mostrar-modal {
+            right: 0; /* Se desliza hacia la derecha para mostrarse */
+        }
+
+        .overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -247,28 +286,184 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             display: none; /* Oculto por defecto */
+            transition: opacity 0.4s ease-out; /* Transición para el fade del overlay */
         }
 
-        .mostrar-ordenar {
+        .mostrar-modal {
             display: block !important;
         }
 
-        .confirmar-pedido-container {
-            position: fixed; /* O absolute según tu layout */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1002; /* Mayor que ordenar-container y background */
-            display: none; /* Oculto por defecto */
-            font-family: 'Montserrat', sans-serif; /* Añade la fuente si la usas */
-            text-align: center; /* Centrar contenido del formulario */
+        /* Estilos del ícono del carrito */
+        .cart-icon-container {
+            position: relative;
+            cursor: pointer;
+            margin-left: 20px;
+            color: white;
+            font-size: 1.5em;
         }
 
-        /* Estilos para el contenido DENTRO del contenedor de confirmar pedido */
+        .cart-icon-container #cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #d32f2f; /* Rojo */
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+        }
+
+        /* Estilos para el contenido del modal de orden (del ordenar.html original) */
+        .menu-selector {
+            /* background-color: #f9f9f9;  Se maneja desde el contenedor principal */
+            /* border-radius: 8px; */
+            padding: 0px; /* Ya hay padding en el contenedor padre */
+            /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+            /* font-family: 'Montserrat', sans-serif; */
+            color: #333;
+            position: relative; /* Necesario para posicionar el botón de cerrar */
+        }
+
+        .menu-selector h2 {
+            color: #2e7d32;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .menu-selector .descripcion {
+            color: #555;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .menu-selector .precio {
+            color: #d32f2f;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .opciones-container {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .opciones-container h3 {
+            color: #2e7d32;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .opciones-container .instruccion {
+            color: #777;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-grid label {
+            display: flex;
+            align-items: center;
+            color: #444;
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+
+        .checkbox-grid input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .cantidad-agregar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .cantidad {
+            display: flex;
+            align-items: center;
+        }
+
+        .cantidad-btn {
+            background-color: #f0f0f0;
+            color: #555;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .cantidad-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .cantidad-input {
+            width: 40px; /* Ajusta según el tamaño que desees para el input de cantidad */
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: white;
+            color: #333;
+            margin: 0 5px; /* Asegura un margen entre los botones y el input */
+        }
+
+        .agregar-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .agregar-btn:hover {
+            background-color: #45a049;
+        }
+
+        .cerrar-orden {
+            position: absolute;
+            top: -10px; /* Ajustado para que esté fuera del padding del contenedor */
+            right: -10px; /* Ajustado para que esté fuera del padding del contenedor */
+            cursor: pointer;
+            font-size: 1.8em;
+            color: #888;
+            transition: color 0.3s ease;
+            background-color: white;
+            border-radius: 50%;
+            padding: 0 8px;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .cerrar-orden:hover {
+            color: #333;
+        }
+
+        /* Estilos para el cuadro de confirmación de pedido */
         .confirmar-pedido-container h2 {
             color: #2e7d32;
             text-align: center;
@@ -281,7 +476,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
-            text-align: left; /* Alinear texto del resumen a la izquierda */
+            text-align: left;
         }
 
         .confirmar-pedido-container .resumen-pedido h3 {
@@ -293,6 +488,7 @@
         .confirmar-pedido-container .resumen-pedido p {
             color: #555;
             margin-bottom: 5px;
+            word-wrap: break-word; /* Para que las opciones largas se rompan en línea */
         }
 
         .confirmar-pedido-container .total-pedido {
@@ -301,6 +497,7 @@
             color: #d32f2f;
             margin-top: 10px;
             margin-bottom: 15px;
+            text-align: right;
         }
 
         .confirmar-pedido-container label {
@@ -308,7 +505,7 @@
             margin-bottom: 5px;
             color: #333;
             font-weight: bold;
-            text-align: left; /* Alinear etiquetas a la izquierda */
+            text-align: left;
         }
 
         .confirmar-pedido-container input[type="text"],
@@ -323,7 +520,7 @@
             font-size: 1em;
         }
 
-        .confirmar-pedido-container button[type="submit"] {
+        .confirmar-pedido-container button {
             background-color: #4caf50;
             color: white;
             border: none;
@@ -333,14 +530,233 @@
             font-size: 1em;
             font-weight: bold;
             transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
         }
 
-        .confirmar-pedido-container button[type="submit"]:hover {
+        .confirmar-pedido-container button:hover {
             background-color: #45a049;
         }
 
-        .mostrar-confirmar {
-            display: block !important;
+        .confirmar-pedido-container button#cancelar-confirmacion-btn {
+            background-color: #f44336;
+        }
+        .confirmar-pedido-container button#cancelar-confirmacion-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Estilos para el cuadro de selección de pago (en inicio.html) */
+        .seleccion-pago-container h3 {
+            color: #2196f3;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .seleccion-pago-container button {
+            background-color: #007bff; /* Color azul para opciones de pago */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            margin: 5px;
+            width: calc(100% - 10px); /* Ajuste de ancho */
+            box-sizing: border-box;
+        }
+        .seleccion-pago-container button#cancelar-pago-btn { /* Botón Cancelar */
+            background-color: #f44336; /* Rojo para cancelar */
+        }
+
+        .seleccion-pago-container button:hover {
+            background-color: #0056b3;
+        }
+        .seleccion-pago-container button#cancelar-pago-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Estilos del modal del carrito (AHORA ES LATERAL DERECHO) */
+        .cart-modal-container h2 {
+            color: white; /* Título blanco */
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .item-total {
+            margin-left: 0;
+            margin-right: 10px; /* Ajusta este valor para acercar o alejar el botón X */
+            white-space: nowrap; /* Evita que el precio se rompa en varias líneas */
+        }
+
+        .cart-items {
+            flex-grow: 1; /* Permite que la lista de ítems ocupe el espacio disponible */
+            max-height: calc(100vh - 200px); /* Ajusta esta altura si tienes otros elementos fijos */
+            overflow-y: auto;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Borde más claro */
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+        }
+
+        .cart-item {
+            display: flex; /* Hacemos que los ítems del carrito usen flexbox */
+            align-items: center; /* Centra verticalmente los elementos */
+            justify-content: space-between; /* Distribuye el espacio entre los elementos */
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Línea divisoria */
+            color: white; /* Color del texto dentro del item del carrito */
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-info h4 {
+            margin: 0 0 5px 0;
+            color: white; /* Nombre del producto blanco */
+            font-size: 1em;
+        }
+
+        .cart-item-info p {
+            margin: 0;
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.8); /* Texto de opciones y precio c/u más claro */
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .cart-item-controls .cantidad-btn {
+            background-color: rgba(255, 255, 255, 0.1); /* Botones de cantidad más transparentes */
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 3px 8px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .cantidad-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-item-controls .cantidad-input {
+            width: 35px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 3px;
+            font-size: 0.9em;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Ajustes para el botón de remover en el carrito */
+        .cart-item-remove {
+            background-color: white; /* Fondo blanco */
+            color: #d32f2f; /* Color rojo de tu marca para la "X" */
+            border: none;
+            border-radius: 50%; /* Para hacerlo circular */
+            width: 28px; /* Ancho del círculo */
+            height: 28px; /* Altura del círculo */
+            display: flex; /* Para centrar la "X" */
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1em; /* Tamaño de la "X" */
+            cursor: pointer;
+            margin-left: 0px; /* Margen a la izquierda para separarlo del precio */
+            transition: background-color 0.3s ease, color 0.3s ease;
+            flex-shrink: 0; /* Evita que el botón se encoja */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Una ligera sombra para que resalte */
+        }
+
+        .cart-item-remove:hover {
+            background-color: #f0f0f0; /* Un gris muy claro al pasar el ratón */
+            color: #b71c1c; /* Un rojo más oscuro al pasar el ratón */
+        }
+
+        .cart-summary {
+            text-align: right;
+            margin-top: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: white; /* Texto del subtotal blanco */
+            border-top: 1px solid rgba(255, 255, 255, 0.3); /* Borde superior más claro */
+            padding-top: 15px;
+        }
+
+        .cart-summary .total {
+            color: white; /* El total también blanco */
+            font-size: 1.2em;
+        }
+
+        .cart-actions button {
+            background-color: white; /* Botones de acción blancos */
+            color: #d32f2f; /* Texto rojo */
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .cart-actions button:hover {
+            background-color: #f0f0f0; /* Un gris claro al pasar el ratón */
+        }
+
+        .cart-actions button#cerrar-carrito-btn {
+            background-color: rgba(0, 0, 0, 0.3); /* Botón "Cerrar" más oscuro */
+            color: white;
+            margin-top: 10px;
+        }
+        .cart-actions button#cerrar-carrito-btn:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Asegúrate de que el botón de cerrar modal del carrito sea visible */
+        .cart-modal-container .cerrar-orden {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: white; /* Color blanco para el ícono de cerrar */
+            background: none; /* Sin fondo */
+            box-shadow: none; /* Sin sombra */
+            font-size: 2em; /* Un poco más grande para ser fácil de ver */
+            z-index: 1002; /* Asegurar que esté por encima de todo */
+            line-height: 1; /* Ajustar línea de altura para que la 'x' se vea bien */
+            padding: 0; /* Quitar padding si se agrega fondo */
+        }
+
+        .cart-modal-container .cerrar-orden:hover {
+            color: rgba(255, 255, 255, 0.8); /* Un poco transparente al pasar el ratón */
+        }
+
+        /* Header Z-index para asegurar que esté por encima del overlay cuando el carrito está abierto */
+        header {
+            z-index: 1002;
+        }
+
+        /* Media query para hacer el carrito responsivo en móviles */
+        @media (max-width: 768px) {
+            .cart-modal-container {
+                width: 85%; /* Más ancho en pantallas pequeñas */
+                right: -85%; /* Ajuste inicial */
+            }
         }
     </style>
     <script>
@@ -385,168 +801,372 @@
             }
         });
 
-        function cargarYMostrarOrden() {
-            document.addEventListener('DOMContentLoaded', () => {
-                const botonesOrdenar = document.querySelectorAll('.btn-ordenar');
-                const ordenarContainer = document.getElementById('ordenar-container');
-                const ordenarBackground = document.getElementById('ordenar-background');
-                const confirmarPedidoContainer = document.getElementById('confirmar-pedido-container');
+        // --- Lógica de los Modales de Pedido, Carrito, Confirmación y Pago (Centralizada) ---
+        const ordenarContainer = document.getElementById('ordenar-container');
+        const cartModalContainer = document.getElementById('cart-modal-container'); // Nuevo contenedor para el carrito
+        const confirmarPedidoContainer = document.getElementById('confirmar-pedido-container');
+        const seleccionPagoContainer = document.getElementById('seleccion-pago-container');
+        const overlay = document.getElementById('overlay'); // Un solo overlay
+        const cartIcon = document.getElementById('cart-icon');
+        const cartCountSpan = document.getElementById('cart-count');
 
-                botonesOrdenar.forEach(boton => {
-                    boton.addEventListener('click', async (event) => {
-                        event.preventDefault();
-                        const productoNombre = boton.dataset.nombre;
-                        const productoPrecio = parseFloat(boton.dataset.precio);
+        let currentProduct = {}; // Objeto para guardar los detalles del producto actual al abrir el modal de ordenar
+        let cart = []; // Array para almacenar los ítems del carrito
 
-                        try {
-                            const responseOrdenar = await fetch('ordenar.html');
-                            if (!responseOrdenar.ok) {
-                                throw new Error(`HTTP error! status: ${responseOrdenar.status}`);
-                            }
-                            const htmlOrden = await responseOrdenar.text();
-                            ordenarContainer.innerHTML = htmlOrden;
-                            ordenarContainer.classList.add('mostrar-ordenar');
-                            ordenarBackground.classList.add('mostrar-ordenar');
-
-                            // Actualizar el título y precio del menú dinámicamente
-                            const tituloOrden = ordenarContainer.querySelector('h2');
-                            const precioOrden = ordenarContainer.querySelector('.precio');
-                            const agregarBtn = ordenarContainer.querySelector('.agregar-btn');
-
-                            if (tituloOrden) {
-                                tituloOrden.textContent = productoNombre;
-                            }
-                            if (precioOrden) {
-                                precioOrden.textContent = `S/. ${productoPrecio.toFixed(2)}`;
-                            }
-                            if (agregarBtn) {
-                                agregarBtn.textContent = `Agregar S/. ${productoPrecio.toFixed(2)}`;
-                                agregarBtn.dataset.precioUnitario = productoPrecio; // Almacenar precio unitario
-                            }
-
-                            // Agregar funcionalidad para cerrar la ventana de ordenar
-                            const botonCerrarOrden = ordenarContainer.querySelector('.cerrar-orden');
-                            if (botonCerrarOrden) {
-                                botonCerrarOrden.addEventListener('click', () => {
-                                    ordenarContainer.classList.remove('mostrar-ordenar');
-                                    ordenarBackground.classList.remove('mostrar-ordenar');
-                                    ordenarContainer.innerHTML = '';
-                                    confirmarPedidoContainer.classList.remove('mostrar-confirmar');
-                                    confirmarPedidoContainer.innerHTML = '';
-                                });
-                            } else {
-                                ordenarBackground.addEventListener('click', () => {
-                                    ordenarContainer.classList.remove('mostrar-ordenar');
-                                    ordenarBackground.classList.remove('mostrar-ordenar');
-                                    ordenarContainer.innerHTML = '';
-                                    confirmarPedidoContainer.classList.remove('mostrar-confirmar');
-                                    confirmarPedidoContainer.innerHTML = '';
-                                });
-                                ordenarContainer.addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                });
-                            }
-
-                            // Lógica para el botón "Agregar" DENTRO de ordenar.html (cargado dinámicamente)
-                            const agregarBtnDentro = ordenarContainer.querySelector('.agregar-btn');
-                            const cantidadInput = ordenarContainer.querySelector('.cantidad-input');
-                            const botonesCantidad = ordenarContainer.querySelectorAll('.cantidad-btn');
-
-                            if (agregarBtnDentro && cantidadInput && botonesCantidad.length > 0) {
-                                botonesCantidad.forEach(botonCantidad => {
-                                    botonCantidad.addEventListener('click', () => {
-                                        let cantidad = parseInt(cantidadInput.value);
-                                        if (botonCantidad.dataset.action === 'decrement' && cantidad > 1) {
-                                            cantidad--;
-                                        } else if (botonCantidad.dataset.action === 'increment') {
-                                            cantidad++;
-                                        }
-                                        cantidadInput.value = cantidad;
-                                        actualizarPrecioOrden(cantidad, agregarBtnDentro.dataset.precioUnitario, agregarBtnDentro);
-                                    });
-                                });
-
-                                cantidadInput.addEventListener('change', () => {
-                                    let cantidad = parseInt(cantidadInput.value);
-                                    if (isNaN(cantidad) || cantidad < 1) {
-                                        cantidad = 1;
-                                    }
-                                    cantidadInput.value = cantidad;
-                                    actualizarPrecioOrden(cantidad, agregarBtnDentro.dataset.precioUnitario, agregarBtnDentro);
-                                });
-
-                                function actualizarPrecioOrden(cantidad, precioUnitario, botonAgregar) {
-                                    const precioTotal = parseFloat(precioUnitario) * cantidad;
-                                    botonAgregar.textContent = `Agregar S/. ${precioTotal.toFixed(2)}`;
-                                }
-
-                                agregarBtnDentro.addEventListener('click', () => {
-                                    const cantidad = parseInt(cantidadInput.value);
-                                    const opcionesSeleccionadas = Array.from(ordenarContainer.querySelectorAll('input[name="opcion"]:checked'))
-                                        .map(checkbox => checkbox.value);
-
-                                    ordenarContainer.classList.remove('mostrar-ordenar');
-                                    ordenarBackground.classList.remove('mostrar-ordenar');
-                                    ordenarContainer.innerHTML = '';
-
-                                    mostrarConfirmarPedido(productoNombre, cantidad, productoPrecio, opcionesSeleccionadas);
-                                });
-                            }
-
-                        } catch (error) {
-                            console.error('No se pudo cargar ordenar.html:', error);
-                            ordenarContainer.innerHTML = '<p>Error al cargar la página de pedido.</p>';
-                            ordenarContainer.classList.add('mostrar-ordenar');
-                            ordenarBackground.classList.add('mostrar-ordenar');
-                        }
-                    });
-                });
-            });
+        // Función para actualizar el contador del carrito en el ícono
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
+            cartCountSpan.textContent = totalItems;
+            cartCountSpan.style.display = totalItems > 0 ? 'flex' : 'none'; // Muestra u oculta el contador
         }
 
-        function mostrarConfirmarPedido(nombreProducto, cantidad, precioUnitario, opciones) {
-            const confirmarPedidoContainer = document.getElementById('confirmar-pedido-container');
-            const precioTotal = parseFloat(precioUnitario) * cantidad;
-            confirmarPedidoContainer.innerHTML = `
-                <h2>Confirmar Pedido</h2>
-                <div class="resumen-pedido">
-                    <h3>Resumen</h3>
-                    <p>Producto: ${nombreProducto}</p>
-                    <p>Cantidad: ${cantidad}</p>
-                    ${opciones.length > 0 ? `<p>Opciones: ${opciones.join(', ')}</p>` : '<p>Sin opciones adicionales.</p>'}
-                    <p class="total-pedido">Total: S/. ${precioTotal.toFixed(2)}</p>
-                </div>
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" placeholder="Tu nombre">
-                <label for="telefono">Teléfono:</label>
-                <input type="tel" id="telefono" placeholder="Tu número de teléfono">
-                <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" placeholder="Tu dirección">
-                <button type="submit">Confirmar Pedido</button>
-            `;
-            confirmarPedidoContainer.classList.add('mostrar-confirmar');
-            document.getElementById('ordenar-background').classList.add('mostrar-ordenar');
+        // Cierra todos los modales y limpia los contenedores
+        function cerrarTodosLosModales() {
+            ordenarContainer.classList.remove('mostrar-modal');
+            cartModalContainer.classList.remove('mostrar-modal');
+            confirmarPedidoContainer.classList.remove('mostrar-modal');
+            seleccionPagoContainer.classList.remove('mostrar-modal');
+            overlay.classList.remove('mostrar-modal');
 
-            const backgroundCerrarConfirmar = document.getElementById('ordenar-background');
-            backgroundCerrarConfirmar.addEventListener('click', () => {
-                confirmarPedidoContainer.classList.remove('mostrar-confirmar');
-                backgroundCerrarConfirmar.classList.remove('mostrar-ordenar');
-                confirmarPedidoContainer.innerHTML = '';
+            // Limpiar contenido para asegurar que se cargue fresco cada vez
+            ordenarContainer.innerHTML = '';
+            cartModalContainer.innerHTML = '';
+            confirmarPedidoContainer.innerHTML = '';
+            seleccionPagoContainer.innerHTML = '';
+        }
+
+        // Event listener para el fondo (cierra todos los modales al hacer clic fuera)
+        overlay.addEventListener('click', cerrarTodosLosModales);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const botonesOrdenar = document.querySelectorAll('.btn-ordenar');
+
+            // Inicializar el contador del carrito
+            updateCartCount();
+
+            // Event listener para el ícono del carrito
+            cartIcon.addEventListener('click', mostrarCarrito);
+
+            botonesOrdenar.forEach(boton => {
+                boton.addEventListener('click', async (event) => {
+                    event.preventDefault();
+
+                    // Almacenar los datos del producto al hacer clic en "Ordenar"
+                    currentProduct = {
+                        nombre: boton.dataset.nombre,
+                        precio: parseFloat(boton.dataset.precio),
+                        descripcion: boton.dataset.descripcion || ''
+                    };
+
+                    try {
+                        const responseOrden = await fetch('ordenar.html');
+                        if (!responseOrden.ok) {
+                            throw new Error(`HTTP error! status: ${responseOrden.status}`);
+                        }
+                        const htmlOrden = await responseOrden.text();
+                        ordenarContainer.innerHTML = htmlOrden;
+                        ordenarContainer.classList.add('mostrar-modal');
+                        overlay.classList.add('mostrar-modal');
+
+                        // Ahora que el contenido está cargado, podemos manipular sus elementos
+                        const tituloOrden = ordenarContainer.querySelector('h2');
+                        const descripcionOrden = ordenarContainer.querySelector('.descripcion');
+                        const precioOrdenDisplay = ordenarContainer.querySelector('.precio');
+                        const cantidadInput = ordenarContainer.querySelector('.cantidad-input');
+                        const agregarBtn = ordenarContainer.querySelector('.agregar-btn');
+                        const botonesCantidad = ordenarContainer.querySelectorAll('.cantidad-btn');
+                        const cerrarOrdenBtn = ordenarContainer.querySelector('.cerrar-orden');
+
+                        if (tituloOrden) tituloOrden.textContent = currentProduct.nombre;
+                        if (descripcionOrden) descripcionOrden.textContent = currentProduct.descripcion;
+                        if (precioOrdenDisplay) precioOrdenDisplay.textContent = `S/. ${currentProduct.precio.toFixed(2)}`;
+                        if (agregarBtn) agregarBtn.textContent = `Agregar S/. ${currentProduct.precio.toFixed(2)}`;
+                        if (cantidadInput) cantidadInput.value = 1; // Asegura que la cantidad inicial sea 1
+
+                        // Lógica para los botones de cantidad (dentro del modal de ordenar)
+                        botonesCantidad.forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                let cantidad = parseInt(cantidadInput.value);
+                                if (btn.dataset.action === 'decrement' && cantidad > 1) {
+                                    cantidad--;
+                                } else if (btn.dataset.action === 'increment') {
+                                    cantidad++;
+                                }
+                                cantidadInput.value = cantidad;
+                                actualizarPrecioOrdenBoton(cantidad, currentProduct.precio, agregarBtn);
+                            });
+                        });
+
+                        cantidadInput.addEventListener('change', () => {
+                            let cantidad = parseInt(cantidadInput.value);
+                            if (isNaN(cantidad) || cantidad < 1) {
+                                cantidad = 1;
+                            }
+                            cantidadInput.value = cantidad;
+                            actualizarPrecioOrdenBoton(cantidad, currentProduct.precio, agregarBtn);
+                        });
+
+                        function actualizarPrecioOrdenBoton(cantidad, precioUnitario, botonAgregar) {
+                            const precioTotalCalculado = precioUnitario * cantidad;
+                            botonAgregar.textContent = `Agregar S/. ${precioTotalCalculado.toFixed(2)}`;
+                        }
+
+                        // Lógica para el botón "Agregar" (dentro del modal de ordenar)
+                        if (agregarBtn) {
+                            agregarBtn.addEventListener('click', () => {
+                                const cantidadSeleccionada = parseInt(cantidadInput.value);
+                                const opcionesSeleccionadas = Array.from(ordenarContainer.querySelectorAll('input[name="opcion"]:checked'))
+                                    .map(checkbox => {
+                                        // Obtener el texto de la etiqueta si es posible, o el valor
+                                        const label = checkbox.closest('label');
+                                        return label ? label.textContent.trim() : checkbox.value;
+                                    });
+
+                                const itemToAdd = {
+                                    nombre: currentProduct.nombre,
+                                    precio: currentProduct.precio,
+                                    cantidad: cantidadSeleccionada,
+                                    opciones: opcionesSeleccionadas
+                                };
+
+                                agregarAlCarrito(itemToAdd);
+                                cerrarTodosLosModales(); // Cierra el modal de ordenar
+                                alert(`"${itemToAdd.nombre}" (${itemToAdd.cantidad}) agregado al carrito.`); // Notificación simple
+                            });
+                        }
+
+                        // Lógica para el botón de cerrar la ventana de ordenar
+                        if (cerrarOrdenBtn) {
+                            cerrarOrdenBtn.addEventListener('click', cerrarTodosLosModales);
+                        }
+
+                    } catch (error) {
+                        console.error('No se pudo cargar ordenar.html:', error);
+                        ordenarContainer.innerHTML = '<p>Error al cargar la página de pedido.</p>';
+                        ordenarContainer.classList.add('mostrar-modal');
+                        overlay.classList.add('mostrar-modal');
+                    }
+                });
             });
+        });
 
-            const confirmarPedidoForm = confirmarPedidoContainer.querySelector('button[type="submit"]');
-            if (confirmarPedidoForm) {
-                confirmarPedidoForm.addEventListener('click', () => {
-                    alert(`Pedido confirmado por S/. ${precioTotal.toFixed(2)}. ¡Gracias por tu compra!`);
-                    confirmarPedidoContainer.classList.remove('mostrar-confirmar');
-                    backgroundCerrarConfirmar.classList.remove('mostrar-ordenar');
-                    confirmarPedidoContainer.innerHTML = '';
-                    // Aquí puedes agregar la lógica para enviar el pedido al servidor
+        // --- Funciones del Carrito ---
+
+        function agregarAlCarrito(item) {
+            // Verificar si el producto ya está en el carrito con las mismas opciones
+            const existingItemIndex = cart.findIndex(cartItem => 
+                cartItem.nombre === item.nombre && 
+                JSON.stringify(cartItem.opciones.sort()) === JSON.stringify(item.opciones.sort())
+            );
+
+            if (existingItemIndex > -1) {
+                // Si existe, solo actualiza la cantidad
+                cart[existingItemIndex].cantidad += item.cantidad;
+            } else {
+                // Si no existe, agrégalo como un nuevo ítem
+                cart.push(item);
+            }
+            updateCartCount();
+        }
+
+        function mostrarCarrito() {
+            cerrarTodosLosModales(); // Asegura que otros modales estén cerrados
+            cartModalContainer.classList.add('mostrar-modal');
+            overlay.classList.add('mostrar-modal');
+
+            let cartItemsHtml = '';
+            let subtotal = 0;
+
+            if (cart.length === 0) {
+                cartItemsHtml = '<p style="text-align: center; color: white;">Tu carrito está vacío.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const itemTotal = item.precio * item.cantidad;
+                    subtotal += itemTotal;
+                    cartItemsHtml += `
+                        <div class="cart-item" data-index="${index}">
+                            <div class="cart-item-info">
+                                <h4>${item.nombre}</h4>
+                                <p>S/. ${item.precio.toFixed(2)} c/u</p>
+                                ${item.opciones.length > 0 ? `<p>Opciones: ${item.opciones.join(', ')}</p>` : ''}
+                            </div>
+                            <div class="cart-item-controls">
+                                <button class="cantidad-btn" data-action="decrement" data-index="${index}">-</button>
+                                <input type="number" class="cantidad-input" value="${item.cantidad}" min="1" data-index="${index}">
+                                <button class="cantidad-btn" data-action="increment" data-index="${index}">+</button>
+                            </div>
+                            <span class="item-total">S/. ${itemTotal.toFixed(2)}</span>
+                            <button class="cart-item-remove" data-index="${index}">&times;</button>
+                        </div>
+                    `;
                 });
             }
+
+            cartModalContainer.innerHTML = `
+                <span class="cerrar-orden" id="cerrar-carrito-modal">&times;</span>
+                <h2>Tu Carrito</h2>
+                <div class="cart-items">
+                    ${cartItemsHtml}
+                </div>
+                <div class="cart-summary">
+                    <p>Subtotal: <span class="total">S/. ${subtotal.toFixed(2)}</span></p>
+                </div>
+                <div class="cart-actions">
+                    <button id="proceder-al-pago-carrito" ${cart.length === 0 ? 'disabled' : ''}>Proceder al Pago</button>
+                    <button id="cerrar-carrito-btn">Cerrar</button>
+                </div>
+            `;
+
+            // Agregar listeners para el modal del carrito
+            document.getElementById('cerrar-carrito-modal').addEventListener('click', cerrarTodosLosModales);
+            document.getElementById('cerrar-carrito-btn').addEventListener('click', cerrarTodosLosModales);
+
+            // Manejar cambios de cantidad y eliminación en el carrito
+            cartModalContainer.querySelectorAll('.cart-item-controls .cantidad-btn').forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    const index = parseInt(event.target.dataset.index);
+                    if (isNaN(index) || index < 0 || index >= cart.length) return;
+
+                    let newQuantity = cart[index].cantidad;
+                    if (event.target.dataset.action === 'decrement') {
+                        newQuantity = Math.max(1, newQuantity - 1);
+                    } else if (event.target.dataset.action === 'increment') {
+                        newQuantity++;
+                    }
+                    cart[index].cantidad = newQuantity;
+                    mostrarCarrito(); // Re-renderiza el carrito para actualizar
+                    updateCartCount();
+                });
+            });
+
+            cartModalContainer.querySelectorAll('.cart-item-controls .cantidad-input').forEach(input => {
+                input.addEventListener('change', (event) => {
+                    const index = parseInt(event.target.dataset.index);
+                    if (isNaN(index) || index < 0 || index >= cart.length) return;
+
+                    let newQuantity = parseInt(event.target.value);
+                    if (isNaN(newQuantity) || newQuantity < 1) {
+                        newQuantity = 1;
+                    }
+                    cart[index].cantidad = newQuantity;
+                    mostrarCarrito(); // Re-renderiza el carrito
+                    updateCartCount();
+                });
+            });
+
+            cartModalContainer.querySelectorAll('.cart-item-remove').forEach(btn => {
+                btn.addEventListener('click', (event) => {
+                    const index = parseInt(event.target.dataset.index);
+                    if (isNaN(index) || index < 0 || index >= cart.length) return;
+
+                    if (confirm(`¿Estás seguro de que quieres eliminar "${cart[index].nombre}" del carrito?`)) {
+                        cart.splice(index, 1); // Elimina el ítem del array
+                        mostrarCarrito(); // Re-renderiza el carrito
+                        updateCartCount();
+                    }
+                });
+            });
+
+            // Listener para el botón "Proceder al Pago" del carrito
+            document.getElementById('proceder-al-pago-carrito').addEventListener('click', () => {
+                if (cart.length === 0) {
+                    alert('Tu carrito está vacío. Por favor, agrega productos antes de proceder al pago.');
+                    return;
+                }
+                cerrarTodosLosModales();
+                mostrarConfirmarPedidoGeneral();
+            });
         }
 
-        cargarYMostrarOrden();
+        function mostrarConfirmarPedidoGeneral() {
+            let resumenHtml = '';
+            let totalGeneral = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.precio * item.cantidad;
+                totalGeneral += itemTotal;
+                resumenHtml += `
+                    <p>${item.nombre} (x${item.cantidad}) - S/. ${itemTotal.toFixed(2)}</p>
+                    ${item.opciones.length > 0 ? `<p style="font-size:0.85em; margin-left:15px; color:#777;">Opciones: ${item.opciones.join(', ')}</p>` : ''}
+                `;
+            });
+
+            confirmarPedidoContainer.innerHTML = `
+                <span class="cerrar-orden" id="cerrar-confirmacion-modal">&times;</span>
+                <h2>Confirmar Pedido</h2>
+                <div class="resumen-pedido">
+                    <h3>Resumen de tu Pedido</h3>
+                    ${resumenHtml}
+                    <p class="total-pedido">Total a Pagar: <span class="total">S/. ${totalGeneral.toFixed(2)}</span></p>
+                </div>
+                <label for="nombre-cliente">Nombre:</label>
+                <input type="text" id="nombre-cliente" placeholder="Tu nombre" required>
+                <label for="telefono-cliente">Teléfono:</label>
+                <input type="tel" id="telefono-cliente" placeholder="Tu número de teléfono" required>
+                <label for="direccion-cliente">Dirección:</label>
+                <input type="text" id="direccion-cliente" placeholder="Tu dirección" required>
+                <button type="submit" id="proceder-pago-btn">Proceder al Pago</button>
+                <button type="button" id="cancelar-confirmacion-btn">Cancelar</button>
+            `;
+            confirmarPedidoContainer.classList.add('mostrar-modal');
+            overlay.classList.add('mostrar-modal');
+
+            // Listener para el botón Cancelar de la confirmación
+            document.getElementById('cancelar-confirmacion-btn').addEventListener('click', cerrarTodosLosModales);
+            document.getElementById('cerrar-confirmacion-modal').addEventListener('click', cerrarTodosLosModales);
+
+
+            // Listener para el botón "Proceder al Pago"
+            document.getElementById('proceder-pago-btn').addEventListener('click', () => {
+                const nombreCliente = document.getElementById('nombre-cliente').value;
+                const telefonoCliente = document.getElementById('telefono-cliente').value;
+                const direccionCliente = document.getElementById('direccion-cliente').value;
+
+                if (!nombreCliente || !telefonoCliente || !direccionCliente) {
+                    alert('Por favor, completa todos los campos para proceder con el pago.');
+                    return;
+                }
+
+                // Oculta el modal de confirmación y muestra el de selección de pago
+                confirmarPedidoContainer.classList.remove('mostrar-modal');
+                confirmarPedidoContainer.innerHTML = ''; // Limpia el contenido
+
+                mostrarSeleccionPago(nombreCliente, telefonoCliente, direccionCliente, totalGeneral);
+            });
+        }
+
+        function mostrarSeleccionPago(nombreCliente, telefonoCliente, direccionCliente, totalAPagar) {
+            seleccionPagoContainer.innerHTML = `
+                <span class="cerrar-orden" id="cerrar-pago-modal">&times;</span>
+                <h3>Escoja su medio de pago</h3>
+                <button data-metodo="tarjeta_credito">Tarjeta de Crédito</button>
+                <button data-metodo="tarjeta_debito">Tarjeta de Débito</button>
+                <button data-metodo="efectivo">Efectivo</button>
+                <button id="cancelar-pago-btn">Cancelar</button>
+            `;
+            seleccionPagoContainer.classList.add('mostrar-modal');
+            overlay.classList.add('mostrar-modal');
+
+            // Listener para el botón Cancelar de selección de pago
+            document.getElementById('cancelar-pago-btn').addEventListener('click', cerrarTodosLosModales);
+            document.getElementById('cerrar-pago-modal').addEventListener('click', cerrarTodosLosModales);
+
+            // Listeners para los botones de método de pago
+            seleccionPagoContainer.querySelectorAll('button[data-metodo]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const metodoPago = btn.dataset.metodo;
+                    
+                    // Aquí es donde "finalizarías" el pedido.
+                    // En un proyecto real, se enviaría al servidor.
+                    alert(`¡Pedido de Ralph's Sanguchería confirmado para ${nombreCliente} (${telefonoCliente}) en ${direccionCliente}!\nTotal: S/. ${totalAPagar.toFixed(2)}\nMétodo de pago: ${metodoPago.replace('_', ' ').toUpperCase()}.\n¡Gracias por tu compra!`);
+                    
+                    // Limpia el carrito después de la compra exitosa
+                    cart = []; 
+                    updateCartCount(); // Actualiza el contador del carrito a 0
+                    cerrarTodosLosModales(); // Cierra todos los modales
+                });
+            });
+        }
     </script>
 </body>
 </html>
