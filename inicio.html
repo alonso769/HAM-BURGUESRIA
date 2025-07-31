@@ -14,7 +14,8 @@
 <body>
     <header> 
         <div class="header-container">
-            <div class="logo-container"> <div class="logo">
+            <div class="logo-container"> 
+                <div class="logo">
                     <img src="img/logo.png" alt="Ralph's Sanguchería Logo">
                 </div>
             </div>
@@ -25,12 +26,19 @@
                 <li><a href="#locales">Locales</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
-            <div class="cart-icon-container">
-                <i class="fas fa-shopping-cart" id="cart-icon"></i>
-                <span id="cart-count" class="cart-count">0</span>
-            </div>
-            <div class="mobile-menu-btn">
-                <i class="fas fa-bars"></i>
+            <div class="header-right">
+                <div class="cart-icon-container">
+                    <i class="fas fa-shopping-cart" id="cart-icon"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </div>
+                <div class="user-profile-container">
+                    <i class="fas fa-user-circle" id="user-icon"></i>
+                    <div class="user-dropdown-menu" id="user-dropdown">
+                        </div>
+                </div>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
         </div>
     </header>
@@ -47,52 +55,8 @@
         <div class="section-title">
             <h2>Nuestros Favoritos</h2>
         </div>
-        <div class="products-container">
-            <div class="product-card">
-                <div class="product-img">
-                    <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Sánguche Clásico">
-                </div>
-                <div class="product-info">
-                    <h3>Sánguche Clásico</h3>
-                    <p>Pan artesanal, carne jugosa, lechuga fresca, tomate y nuestra salsa especial.</p>
-                    <span class="price">S/. 15.90</span>
-                    <a href="#" class="btn btn-ordenar" data-producto="clasico" data-precio="15.90" data-nombre="Sánguche Clásico" data-descripcion="Pan artesanal, carne jugosa, lechuga fresca, tomate y nuestra salsa especial.">Ordenar</a>
-                </div>
+        <div class="products-container" id="products-container">
             </div>
-            <div class="product-card">
-                <div class="product-img">
-                    <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Sánguche Especial">
-                </div>
-                <div class="product-info">
-                    <h3>Sánguche Especial</h3>
-                    <p>Doble carne, queso cheddar, tocino crujiente, cebolla caramelizada y salsa BBQ.</p>
-                    <span class="price">S/. 22.90</span>
-                    <a href="#" class="btn btn-ordenar" data-producto="especial" data-precio="22.90" data-nombre="Sánguche Especial" data-descripcion="Doble carne, queso cheddar, tocino crujiente, cebolla caramelizada y salsa BBQ.">Ordenar</a>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-img">
-                    <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Sánguche Vegetariano">
-                </div>
-                <div class="product-info">
-                    <h3>Sánguche Vegetariano</h3>
-                    <p>Hamburguesa de lentejas, aguacate, rúcula, tomate y mayonesa de hierbas.</p>
-                    <span class="price">S/. 18.90</span>
-                    <a href="#" class="btn btn-ordenar" data-producto="vegetariano" data-precio="18.90" data-nombre="Sánguche Vegetariano" data-descripcion="Hamburguesa de lentejas, aguacate, rúcula, tomate y mayonesa de hierbas.">Ordenar</a>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-img">
-                    <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Papas Ralph's">
-                </div>
-                <div class="product-info">
-                    <h3>Papas Ralph's</h3>
-                    <p>Papas fritas crujientes con queso cheddar derretido, tocino y cebolla verde.</p>
-                    <span class="price">S/. 12.90</span>
-                    <a href="#" class="btn btn-ordenar" data-producto="papas" data-precio="12.90" data-nombre="Papas Ralph's" data-descripcion="Papas fritas crujientes con queso cheddar derretido, tocino y cebolla verde.">Ordenar</a>
-                </div>
-            </div>
-        </div>
     </section>
 
     <section class="about-section" id="nosotros">
@@ -104,79 +68,86 @@
                 <h2>Nuestra Historia</h2>
                 <p>Ralph's Sanguchería nació en 2015 con una misión clara: ofrecer los mejores sánguches del Perú con ingredientes frescos y de alta calidad. Lo que comenzó como un pequeño local en Lima, se ha convertido en una cadena reconocida por su sabor único y servicio excepcional.</p>
                 <p>Nuestro compromiso es brindar una experiencia gastronómica inolvidable, donde cada bocado sea una explosión de sabores que te haga volver por más. Todos nuestros productos son elaborados artesanalmente y con mucho cariño.</p>
-                <a href="#" class="btn">Conoce más</a>
+                <a href="historia.html" class="btn">Conoce más</a>
             </div>
         </div>
     </section>
 
     <section class="locations-section" id="locales">
-        <div class="section-title">
-            <h2>Nuestros Locales</h2>
-        </div>
-        <div class="locations-container">
-            <div class="locations-grid">
-                <div class="location-card">
-                    <div class="location-img">
-                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Local Miraflores">
+    <div class="section-title">
+        <h2>Nuestros Locales</h2>
+    </div>
+    <div class="locations-container" id="locations-container">
+        <div class="locations-grid" id="locations-grid">
+            <div class="location-card" id="card-surco">
+                <div class="location-img">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Local Santiago de Surco">
+                </div>
+                <div class="location-info">
+                    <h3>Santiago de Surco</h3>
+                    <div class="address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>Patio de Comidas en el Jockey Plaza - Av. Javier Prado Este, Lima</p>
                     </div>
-                    <div class="location-info">
-                        <h3>Miraflores</h3>
-                        <div class="address">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <p>Av. Benavides 1234, Miraflores, Lima</p>
-                        </div>
-                        <div class="hours">
-                            <i class="far fa-clock"></i>
-                            <p>Lun - Dom: 12:00 - 22:00</p>
-                        </div>
-                        <div class="phone">
-                            <i class="fas fa-phone-alt"></i>
-                            <p>(01) 123-4567</p>
-                        </div>
+                    <div class="hours">
+                        <i class="far fa-clock"></i>
+                        <p>Lun - Dom: 12:00 - 22:00</p>
+                    </div>
+                    <div class="phone">
+                        <i class="fas fa-phone-alt"></i>
+                        <p>(+51) 941 433 000</p>
                     </div>
                 </div>
-                <div class="location-card">
-                    <div class="location-img">
-                        <img src="https://images.unsplash.com/photo-1555992336-fb0d29498b13?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Local San Isidro">
+            </div>
+            <div class="location-card" id="card-smp">
+                <div class="location-img">
+                    <img src="https://images.unsplash.com/photo-1555992336-fb0d29498b13?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Local San Martin de Porres">
+                </div>
+                <div class="location-info">
+                    <h3>San Martín de Porres</h3>
+                    <div class="address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>Av. Alfredo Mendiola 7042, San Martín de Porres, Lima</p>
                     </div>
-                    <div class="location-info">
-                        <h3>San Isidro</h3>
-                        <div class="address">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <p>Calle Las Begonias 567, San Isidro, Lima</p>
-                        </div>
-                        <div class="hours">
-                            <i class="far fa-clock"></i>
-                            <p>Lun - Dom: 12:00 - 22:00</p>
-                        </div>
-                        <div class="phone">
-                            <i class="fas fa-phone-alt"></i>
-                            <p>(01) 987-6543</p>
-                        </div>
+                    <div class="hours">
+                        <i class="far fa-clock"></i>
+                        <p>Lun - Dom: 12:00 - 22:00</p>
+                    </div>
+                    <div class="phone">
+                        <i class="fas fa-phone-alt"></i>
+                        <p>(01) 6014000</p>
                     </div>
                 </div>
-                <div class="location-card">
-                    <div class="location-img">
-                        <img src="https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Local Surco">
+            </div>
+            <div class="location-card" id="card-san-miguel">
+                <div class="location-img">
+                    <img src="https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Local San Miguel">
+                </div>
+                <div class="location-info">
+                    <h3>San Miguel</h3>
+                    <div class="address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>Av. de la Marina 2543, San Miguel, Lima</p>
                     </div>
-                    <div class="location-info">
-                        <h3>Surco</h3>
-                        <div class="address">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <p>Av. Primavera 789, Surco, Lima</p>
-                        </div>
-                        <div class="hours">
-                            <i class="far fa-clock"></i>
-                            <p>Lun - Dom: 12:00 - 22:00</p>
-                        </div>
-                        <div class="phone">
-                            <i class="fas fa-phone-alt"></i>
-                            <p>(01) 456-7890</p>
-                        </div>
+                    <div class="hours">
+                        <i class="far fa-clock"></i>
+                        <p>Lun - Dom: 12:00 - 22:00</p>
+                    </div>
+                    <div class="phone">
+                        <i class="fas fa-phone-alt"></i>
+                        <p>(+51) 945 605 955</p>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="location-map-container" id="map-container">
+            <div class="map-header">
+                <h3>Ubicación del Local</h3>
+                <button id="close-map-btn">&times;</button>
+            </div>
+            <iframe id="map-iframe" src="about:blank" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
     </section>
 
     <footer id="contacto">
@@ -197,9 +168,8 @@
             </div>
             <div class="footer-contact">
                 <h3>Contacto</h3>
-                <p><i class="fas fa-map-marker-alt"></i> Av. Principal 123, Lima, Perú</p>
-                <p><i class="fas fa-phone-alt"></i> (01) 123-4567</p>
-                <p><i class="fas fa-envelope"></i> info@ralphssangucheria.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Javier Prado Este, Santiago de Surco, Lima</p>
+                <p><i class="fas fa-phone-alt"></i> (+51) 941 433 000</p>
             </div>
             <div class="footer-social">
                 <h3>Síguenos</h3>
@@ -222,16 +192,164 @@
     </footer>
 
     <div id="ordenar-container" class="ordenar-container">
-        </div>
+    </div>
     <div id="cart-modal-container" class="cart-modal-container">
-        </div>
+    </div>
     <div id="confirmar-pedido-container" class="confirmar-pedido-container">
-        </div>
+    </div>
     <div id="seleccion-pago-container" class="seleccion-pago-container">
-        </div>
+    </div>
     <div id="overlay" class="overlay"></div> 
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+
+        // Tu configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDfJ0fZ30u3RIWjWBRMCMepSoC9P881K3E",
+            authDomain: "ralph-s-sangucheria.firebaseapp.com",
+            projectId: "ralph-s-sangucheria",
+            storageBucket: "ralph-s-sangucheria.firebasestorage.app",
+            messagingSenderId: "795336985600",
+            appId: "1:795336985600:web:66eef18a4eaba9a9bc5ce5",
+            measurementId: "G-TFW57TXCPR"
+        };
+
+        // Inicializa Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Referencias a los nuevos elementos del DOM
+        const userIcon = document.getElementById('user-icon');
+        const userDropdown = document.getElementById('user-dropdown');
+        const cardSurco = document.getElementById('card-surco');
+        const locationsGrid = document.getElementById('locations-grid');
+        const mapContainer = document.getElementById('map-container');
+        const mapIframe = document.getElementById('map-iframe');
+        const closeMapBtn = document.getElementById('close-map-btn');
+
+        // Función para mostrar/ocultar el menú desplegable
+        userIcon.addEventListener('click', (event) => {
+            event.stopPropagation(); // Evita que el clic en el ícono cierre el menú inmediatamente
+            userDropdown.classList.toggle('active');
+        });
+
+        // Cierra el menú desplegable si se hace clic fuera de él
+        document.addEventListener('click', (event) => {
+            if (!userDropdown.contains(event.target) && !userIcon.contains(event.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
+
+        // Listener para el clic en la tarjeta
+        const locationCards = document.querySelectorAll('.location-card');
+        const locationsContainer = document.getElementById('locations-container');
+
+        let originalOrder = Array.from(locationCards);
+        let currentActiveCard = null;
+
+        function getMapSrcByCardId(cardId) {
+            switch (cardId) {
+                case "card-surco":
+                    return "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.380346574519!2d-76.9767708!3d-12.0860936!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c700745d1865%3A0x1dbea93d6793d8d7!2sRalph's!5e0!3m2!1ses-419!2spe!4v1753991287593!5m2!1ses-419!2spe";
+                case "card-san-miguel":
+                    return "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.494102800307!2d-77.0899805!3d-12.0782891!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c9cc3ffb469f%3A0x36aa1e57032f0375!2sRalphs!5e0!3m2!1ses-419!2spe!4v1753995374244!5m2!1ses-419!2spe";
+                case "card-smp":
+                    return "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2760.1856000515154!2d-77.06950794197483!3d-11.940405970098368!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105d1c56aba1e6f%3A0x5e192b182ece4826!2sReal%20Plaza%20Pro!5e0!3m2!1ses-419!2spe!4v1753995566876!5m2!1ses-419!2spe";
+                default:
+                    return "";
+            }
+        }
+        
+        // Evento click para cada tarjeta
+        locationCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const isSameCard = currentActiveCard === card;
+
+                // Si vuelves a hacer clic en la misma, restaura
+                if (isSameCard) {
+                    restoreOriginalLayout();
+                    return;
+                }
+
+                // Restaurar layout antes de mostrar nueva
+                restoreOriginalLayout();
+
+                // Marcar esta como activa
+                currentActiveCard = card;
+                card.classList.add('expanded');
+
+                // Mover esta tarjeta al inicio
+                const grid = document.getElementById('locations-grid');
+                grid.insertBefore(card, grid.firstChild);
+
+                // Ocultar otras tarjetas
+                locationCards.forEach(c => {
+                    if (c !== card) {
+                        c.style.display = 'none';
+                    }
+                });
+
+                // Mostrar el contenedor del mapa
+                mapContainer.classList.add('active');
+                mapIframe.src = getMapSrcByCardId(card.id);
+            });
+        });
+
+        // Botón cerrar mapa
+        closeMapBtn.addEventListener('click', () => {
+            restoreOriginalLayout();
+        });
+
+        // Restaurar tarjetas al estado inicial
+        function restoreOriginalLayout() {
+            const grid = document.getElementById('locations-grid');
+            // Quitar clase activa
+            mapContainer.classList.remove('active');
+            mapIframe.src = "about:blank";
+
+            // Restaurar tarjetas en orden original
+            originalOrder.forEach(card => {
+                card.classList.remove('expanded');
+                card.style.display = 'block';
+                grid.appendChild(card);
+            });
+
+            currentActiveCard = null;
+        }
+
+
+        // Observador de estado de autenticación de Firebase
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Usuario conectado
+                userDropdown.innerHTML = `
+                    <p>¡Hola, ${user.email}!</p>
+                    <a href="#" id="logout-btn">Cerrar Sesión</a>
+                `;
+                document.getElementById('logout-btn').addEventListener('click', async () => {
+                    try {
+                        await signOut(auth);
+                        // Redireccionar al inicio de sesión o recargar la página
+                        window.location.href = "inicio.html";
+                    } catch (error) {
+                        console.error("Error al cerrar sesión:", error);
+                        alert("Error al cerrar sesión: " + error.message);
+                    }
+                });
+            } else {
+                // Usuario desconectado
+                userDropdown.innerHTML = `
+                    <a href="ingresar.html">Iniciar Sesión</a>
+                    <a href="registrar.html">Registrarme</a>
+                `;
+            }
+        });
+
         // Mobile Menu Toggle
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navMenu = document.querySelector('.nav-menu');
@@ -266,70 +384,77 @@
         const header = document.querySelector('header');
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { // Ajusta este valor para determinar cuándo se activa el efecto
+            if (window.scrollY > 50) { 
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
             }
         });
 
-        // --- Lógica de los Modales de Pedido, Carrito, Confirmación y Pago (Centralizada) ---
-        const ordenarContainer = document.getElementById('ordenar-container');
-        const cartModalContainer = document.getElementById('cart-modal-container'); // Nuevo contenedor para el carrito
-        const confirmarPedidoContainer = document.getElementById('confirmar-pedido-container');
-        const seleccionPagoContainer = document.getElementById('seleccion-pago-container');
-        const overlay = document.getElementById('overlay'); // Un solo overlay
-        const cartIcon = document.getElementById('cart-icon');
-        const cartCountSpan = document.getElementById('cart-count');
+        // NUEVA FUNCIÓN PARA CARGAR PRODUCTOS DESDE FIRESTORE
+        const productsContainer = document.getElementById('products-container');
 
-        let currentProduct = {}; // Objeto para guardar los detalles del producto actual al abrir el modal de ordenar
-        let cart = []; // Array para almacenar los ítems del carrito
+        async function cargarProductos() {
+            try {
+                // Obtener todos los documentos de la colección 'productos'
+                const productosRef = collection(db, 'productos');
+                const querySnapshot = await getDocs(productosRef);
 
-        // Función para actualizar el contador del carrito en el ícono
-        function updateCartCount() {
-            const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
-            cartCountSpan.textContent = totalItems;
-            cartCountSpan.style.display = totalItems > 0 ? 'flex' : 'none'; // Muestra u oculta el contador
+                if (querySnapshot.empty) {
+                    productsContainer.innerHTML = '<p>No hay productos disponibles por el momento.</p>';
+                    return;
+                }
+
+                let productosHTML = '';
+                querySnapshot.forEach(doc => {
+                    const producto = doc.data();
+                    productosHTML += `
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="${producto.imagen}" alt="${producto.nombre}">
+                            </div>
+                            <div class="product-info">
+                                <h3>${producto.nombre}</h3>
+                                <p>${producto.descripcion}</p>
+                                <span class="price">S/. ${producto.precio.toFixed(2)}</span>
+                                <a href="#" class="btn btn-ordenar"
+                                    data-producto="${doc.id}"
+                                    data-precio="${producto.precio}"
+                                    data-nombre="${producto.nombre}"
+                                    data-descripcion="${producto.descripcion}">
+                                    Ordenar
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Inyectar el HTML generado en el contenedor
+                productsContainer.innerHTML = productosHTML;
+
+                // Vuelve a adjuntar los event listeners a los nuevos botones
+                adjuntarListenersBotonesOrdenar();
+
+            } catch (error) {
+                console.error("Error al cargar los productos:", error);
+                productsContainer.innerHTML = '<p>Error al cargar los productos. Por favor, inténtalo de nuevo más tarde.</p>';
+            }
         }
 
-        // Cierra todos los modales y limpia los contenedores
-        function cerrarTodosLosModales() {
-            ordenarContainer.classList.remove('mostrar-modal');
-            cartModalContainer.classList.remove('mostrar-modal');
-            confirmarPedidoContainer.classList.remove('mostrar-modal');
-            seleccionPagoContainer.classList.remove('mostrar-modal');
-            overlay.classList.remove('mostrar-modal');
-
-            // Limpiar contenido para asegurar que se cargue fresco cada vez
-            ordenarContainer.innerHTML = '';
-            cartModalContainer.innerHTML = '';
-            confirmarPedidoContainer.innerHTML = '';
-            seleccionPagoContainer.innerHTML = '';
-        }
-
-        // Event listener para el fondo (cierra todos los modales al hacer clic fuera)
-        overlay.addEventListener('click', cerrarTodosLosModales);
-
-        document.addEventListener('DOMContentLoaded', () => {
+        // NUEVA FUNCIÓN PARA RE-ADJUNTAR LOS LISTENERS
+        function adjuntarListenersBotonesOrdenar() {
             const botonesOrdenar = document.querySelectorAll('.btn-ordenar');
-
-            // Inicializar el contador del carrito
-            updateCartCount();
-
-            // Event listener para el ícono del carrito
-            cartIcon.addEventListener('click', mostrarCarrito);
-
             botonesOrdenar.forEach(boton => {
                 boton.addEventListener('click', async (event) => {
                     event.preventDefault();
 
-                    // Almacenar los datos del producto al hacer clic en "Ordenar"
                     currentProduct = {
                         nombre: boton.dataset.nombre,
                         precio: parseFloat(boton.dataset.precio),
                         descripcion: boton.dataset.descripcion || ''
                     };
 
+                    // ... (El resto de tu lógica para mostrar el modal de ordenar) ...
                     try {
                         const responseOrden = await fetch('ordenar.html');
                         if (!responseOrden.ok) {
@@ -420,29 +545,170 @@
                     }
                 });
             });
+        }
+
+        // Llama a la función `cargarProductos` cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            // Llama a la función para cargar los productos dinámicamente
+            cargarProductos();            
+            updateCartCount();
+            cartIcon.addEventListener('click', mostrarCarrito);
+        });
+
+        // --- Lógica de los Modales de Pedido, Carrito, Confirmación y Pago (Centralizada) ---
+        const ordenarContainer = document.getElementById('ordenar-container');
+        const cartModalContainer = document.getElementById('cart-modal-container');
+        const confirmarPedidoContainer = document.getElementById('confirmar-pedido-container');
+        const seleccionPagoContainer = document.getElementById('seleccion-pago-container');
+        const overlay = document.getElementById('overlay');
+        const cartIcon = document.getElementById('cart-icon');
+        const cartCountSpan = document.getElementById('cart-count');
+
+        let currentProduct = {};
+        let cart = [];
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.cantidad, 0);
+            cartCountSpan.textContent = totalItems;
+            cartCountSpan.style.display = totalItems > 0 ? 'flex' : 'none';
+        }
+
+        function cerrarTodosLosModales() {
+            ordenarContainer.classList.remove('mostrar-modal');
+            cartModalContainer.classList.remove('mostrar-modal');
+            confirmarPedidoContainer.classList.remove('mostrar-modal');
+            seleccionPagoContainer.classList.remove('mostrar-modal');
+            overlay.classList.remove('mostrar-modal');
+
+            ordenarContainer.innerHTML = '';
+            cartModalContainer.innerHTML = '';
+            confirmarPedidoContainer.innerHTML = '';
+            seleccionPagoContainer.innerHTML = '';
+        }
+
+        overlay.addEventListener('click', cerrarTodosLosModales);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const botonesOrdenar = document.querySelectorAll('.btn-ordenar');
+
+            updateCartCount();
+
+            cartIcon.addEventListener('click', mostrarCarrito);
+
+            botonesOrdenar.forEach(boton => {
+                boton.addEventListener('click', async (event) => {
+                    event.preventDefault();
+
+                    currentProduct = {
+                        nombre: boton.dataset.nombre,
+                        precio: parseFloat(boton.dataset.precio),
+                        descripcion: boton.dataset.descripcion || ''
+                    };
+
+                    try {
+                        const responseOrden = await fetch('ordenar.html');
+                        if (!responseOrden.ok) {
+                            throw new Error(`HTTP error! status: ${responseOrden.status}`);
+                        }
+                        const htmlOrden = await responseOrden.text();
+                        ordenarContainer.innerHTML = htmlOrden;
+                        ordenarContainer.classList.add('mostrar-modal');
+                        overlay.classList.add('mostrar-modal');
+
+                        const tituloOrden = ordenarContainer.querySelector('h2');
+                        const descripcionOrden = ordenarContainer.querySelector('.descripcion');
+                        const precioOrdenDisplay = ordenarContainer.querySelector('.precio');
+                        const cantidadInput = ordenarContainer.querySelector('.cantidad-input');
+                        const agregarBtn = ordenarContainer.querySelector('.agregar-btn');
+                        const botonesCantidad = ordenarContainer.querySelectorAll('.cantidad-btn');
+                        const cerrarOrdenBtn = ordenarContainer.querySelector('.cerrar-orden');
+
+                        if (tituloOrden) tituloOrden.textContent = currentProduct.nombre;
+                        if (descripcionOrden) descripcionOrden.textContent = currentProduct.descripcion;
+                        if (precioOrdenDisplay) precioOrdenDisplay.textContent = `S/. ${currentProduct.precio.toFixed(2)}`;
+                        if (agregarBtn) agregarBtn.textContent = `Agregar S/. ${currentProduct.precio.toFixed(2)}`;
+                        if (cantidadInput) cantidadInput.value = 1;
+
+                        botonesCantidad.forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                let cantidad = parseInt(cantidadInput.value);
+                                if (btn.dataset.action === 'decrement' && cantidad > 1) {
+                                    cantidad--;
+                                } else if (btn.dataset.action === 'increment') {
+                                    cantidad++;
+                                }
+                                cantidadInput.value = cantidad;
+                                actualizarPrecioOrdenBoton(cantidad, currentProduct.precio, agregarBtn);
+                            });
+                        });
+
+                        cantidadInput.addEventListener('change', () => {
+                            let cantidad = parseInt(cantidadInput.value);
+                            if (isNaN(cantidad) || cantidad < 1) {
+                                cantidad = 1;
+                            }
+                            cantidadInput.value = cantidad;
+                            actualizarPrecioOrdenBoton(cantidad, currentProduct.precio, agregarBtn);
+                        });
+
+                        function actualizarPrecioOrdenBoton(cantidad, precioUnitario, botonAgregar) {
+                            const precioTotalCalculado = precioUnitario * cantidad;
+                            botonAgregar.textContent = `Agregar S/. ${precioTotalCalculado.toFixed(2)}`;
+                        }
+
+                        if (agregarBtn) {
+                            agregarBtn.addEventListener('click', () => {
+                                const cantidadSeleccionada = parseInt(cantidadInput.value);
+                                const opcionesSeleccionadas = Array.from(ordenarContainer.querySelectorAll('input[name="opcion"]:checked'))
+                                    .map(checkbox => {
+                                        const label = checkbox.closest('label');
+                                        return label ? label.textContent.trim() : checkbox.value;
+                                    });
+
+                                const itemToAdd = {
+                                    nombre: currentProduct.nombre,
+                                    precio: currentProduct.precio,
+                                    cantidad: cantidadSeleccionada,
+                                    opciones: opcionesSeleccionadas
+                                };
+
+                                agregarAlCarrito(itemToAdd);
+                                cerrarTodosLosModales();
+                            });
+                        }
+
+                        if (cerrarOrdenBtn) {
+                            cerrarOrdenBtn.addEventListener('click', cerrarTodosLosModales);
+                        }
+
+                    } catch (error) {
+                        console.error('No se pudo cargar ordenar.html:', error);
+                        ordenarContainer.innerHTML = '<p>Error al cargar la página de pedido.</p>';
+                        ordenarContainer.classList.add('mostrar-modal');
+                        overlay.classList.add('mostrar-modal');
+                    }
+                });
+            });
         });
 
         // --- Funciones del Carrito ---
 
         function agregarAlCarrito(item) {
-            // Verificar si el producto ya está en el carrito con las mismas opciones
             const existingItemIndex = cart.findIndex(cartItem => 
                 cartItem.nombre === item.nombre && 
                 JSON.stringify(cartItem.opciones.sort()) === JSON.stringify(item.opciones.sort())
             );
 
             if (existingItemIndex > -1) {
-                // Si existe, solo actualiza la cantidad
                 cart[existingItemIndex].cantidad += item.cantidad;
             } else {
-                // Si no existe, agrégalo como un nuevo ítem
                 cart.push(item);
             }
             updateCartCount();
         }
 
         function mostrarCarrito() {
-            cerrarTodosLosModales(); // Asegura que otros modales estén cerrados
+            cerrarTodosLosModales();
             cartModalContainer.classList.add('mostrar-modal');
             overlay.classList.add('mostrar-modal');
 
@@ -489,11 +755,9 @@
                 </div>
             `;
 
-            // Agregar listeners para el modal del carrito
             document.getElementById('cerrar-carrito-modal').addEventListener('click', cerrarTodosLosModales);
             document.getElementById('cerrar-carrito-btn').addEventListener('click', cerrarTodosLosModales);
 
-            // Manejar cambios de cantidad y eliminación en el carrito
             cartModalContainer.querySelectorAll('.cart-item-controls .cantidad-btn').forEach(btn => {
                 btn.addEventListener('click', (event) => {
                     const index = parseInt(event.target.dataset.index);
@@ -506,7 +770,7 @@
                         newQuantity++;
                     }
                     cart[index].cantidad = newQuantity;
-                    mostrarCarrito(); // Re-renderiza el carrito para actualizar
+                    mostrarCarrito();
                     updateCartCount();
                 });
             });
@@ -521,7 +785,7 @@
                         newQuantity = 1;
                     }
                     cart[index].cantidad = newQuantity;
-                    mostrarCarrito(); // Re-renderiza el carrito
+                    mostrarCarrito();
                     updateCartCount();
                 });
             });
@@ -532,14 +796,13 @@
                     if (isNaN(index) || index < 0 || index >= cart.length) return;
 
                     if (confirm(`¿Estás seguro de que quieres eliminar "${cart[index].nombre}" del carrito?`)) {
-                        cart.splice(index, 1); // Elimina el ítem del array
-                        mostrarCarrito(); // Re-renderiza el carrito
+                        cart.splice(index, 1);
+                        mostrarCarrito();
                         updateCartCount();
                     }
                 });
             });
 
-            // Listener para el botón "Proceder al Pago" del carrito
             document.getElementById('proceder-al-pago-carrito').addEventListener('click', () => {
                 if (cart.length === 0) {
                     alert('Tu carrito está vacío. Por favor, agrega productos antes de proceder al pago.');
@@ -583,12 +846,9 @@
             confirmarPedidoContainer.classList.add('mostrar-modal');
             overlay.classList.add('mostrar-modal');
 
-            // Listener para el botón Cancelar de la confirmación
             document.getElementById('cancelar-confirmacion-btn').addEventListener('click', cerrarTodosLosModales);
             document.getElementById('cerrar-confirmacion-modal').addEventListener('click', cerrarTodosLosModales);
 
-
-            // Listener para el botón "Proceder al Pago"
             document.getElementById('proceder-pago-btn').addEventListener('click', () => {
                 const nombreCliente = document.getElementById('nombre-cliente').value;
                 const telefonoCliente = document.getElementById('telefono-cliente').value;
@@ -599,9 +859,8 @@
                     return;
                 }
 
-                // Oculta el modal de confirmación y muestra el de selección de pago
                 confirmarPedidoContainer.classList.remove('mostrar-modal');
-                confirmarPedidoContainer.innerHTML = ''; // Limpia el contenido
+                confirmarPedidoContainer.innerHTML = '';
 
                 mostrarSeleccionPago(nombreCliente, telefonoCliente, direccionCliente, totalGeneral);
             });
@@ -619,23 +878,18 @@
             seleccionPagoContainer.classList.add('mostrar-modal');
             overlay.classList.add('mostrar-modal');
 
-            // Listener para el botón Cancelar de selección de pago
             document.getElementById('cancelar-pago-btn').addEventListener('click', cerrarTodosLosModales);
             document.getElementById('cerrar-pago-modal').addEventListener('click', cerrarTodosLosModales);
 
-            // Listeners para los botones de método de pago
             seleccionPagoContainer.querySelectorAll('button[data-metodo]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const metodoPago = btn.dataset.metodo;
                     
-                    // Aquí es donde "finalizarías" el pedido.
-                    // En un proyecto real, se enviaría al servidor.
                     alert(`¡Pedido de Ralph's Sanguchería confirmado para ${nombreCliente} (${telefonoCliente}) en ${direccionCliente}!\nTotal: S/. ${totalAPagar.toFixed(2)}\nMétodo de pago: ${metodoPago.replace('_', ' ').toUpperCase()}.\n¡Gracias por tu compra!`);
                     
-                    // Limpia el carrito después de la compra exitosa
                     cart = []; 
-                    updateCartCount(); // Actualiza el contador del carrito a 0
-                    cerrarTodosLosModales(); // Cierra todos los modales
+                    updateCartCount();
+                    cerrarTodosLosModales();
                 });
             });
         }

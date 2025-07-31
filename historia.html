@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuestra Historia | Ralph's Sanguchería</title>
+  <link rel="shortcut icon" href="img/minilogo.png" type="image/x-icon">
+  <link rel="stylesheet" href="estilos.css" /> <!-- Asegúrate de tener tu CSS -->
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      background: url('https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.65);
+      min-height: 100vh;
+      padding: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 1s ease-out;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #ffdd57;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .btn-regresar {
+      display: block;
+      margin: 30px auto 0;
+      padding: 12px 24px;
+      background-color: #ffdd57;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+      text-align: center;
+    }
+
+    .btn-regresar:hover {
+      background-color: #ffc107;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="container">
+      <h1>Nuestra Historia</h1>
+      <p>
+        Ralph's Sanguchería nació en el corazón de Lima en el año 2015 con una misión clara: ofrecer los mejores sánguches del Perú con ingredientes frescos, sabores auténticos y atención de primera. Todo comenzó con un pequeño puesto familiar en una esquina de Miraflores, donde el carisma de Ralph y la pasión por la cocina conquistaban paladares desde el primer bocado.
+      </p>
+      <p>
+        Lo que comenzó con solo tres sánguches en el menú, pronto se convirtió en una explosión de creatividad gastronómica. Nuestros clientes se volvieron parte de nuestra familia, y su entusiasmo nos impulsó a mejorar cada día. Gracias al boca a boca, Ralph's se convirtió en un referente local, reconocido por su pan artesanal, carnes marinadas con recetas secretas y salsas caseras que combinan tradición con un toque moderno.
+      </p>
+      <p>
+        En 2018 abrimos nuestro segundo local, y desde entonces no hemos parado de crecer. Hoy contamos con varias ubicaciones en Lima y seguimos ampliando nuestra presencia en otras regiones del país. Pero lo más importante es que jamás hemos perdido de vista nuestra esencia: calidez humana, cocina artesanal y una experiencia que te hace sentir en casa.
+      </p>
+      <p>
+        En Ralph's Sanguchería creemos que un buen sánguche puede alegrar tu día. Por eso, cada ingrediente que usamos es seleccionado cuidadosamente, cada preparación es hecha al momento, y cada cliente es recibido con una sonrisa. Esta es nuestra historia… y apenas comienza.
+      </p>
+      <a href="index.html?from=historia" class="btn-regresar">← Volver al Inicio</a>
+    </div>
+  </div>
+</body>
+</html>
