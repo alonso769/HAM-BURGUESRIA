@@ -9,7 +9,7 @@
     
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js"; // sendPasswordResetEmail ya no es necesario aquí
+      import { getAuth, signInWithEmailAndPassword, setPersistence, browserSessionPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
       // Tu configuración de Firebase
       const firebaseConfig = {
@@ -33,40 +33,51 @@
         const userNotFound = document.getElementById("userNotFound");
         const passIncorrect = document.getElementById("passIncorrect");
         const togglePassword = document.getElementById("togglePassword");
-        // const forgotPasswordLink = document.querySelector(".options a"); // Ya no es necesario un listener aquí
+        // Referencia al checkbox de "Recuérdame"
+        const rememberMeCheckbox = document.getElementById("rememberMe");
+
+        // Función para mostrar mensajes de error
+        const showMessage = (element, isError) => {
+            element.style.display = isError ? "block" : "none";
+        };
 
         loginForm.addEventListener("submit", async (event) => {
           event.preventDefault();
 
           const email = usernameInput.value.trim();
           const password = passwordInput.value.trim();
+          const rememberMe = rememberMeCheckbox.checked;
 
-          userNotFound.style.display = "none";
-          passIncorrect.style.display = "none";
-          document.getElementById("userError").style.display = "none"; // Limpiar error de usuario
-          document.getElementById("passError").style.display = "none"; // Limpiar error de contraseña
+          // Limpiar mensajes anteriores
+          showMessage(userNotFound, false);
+          showMessage(passIncorrect, false);
+          showMessage(document.getElementById("userError"), false);
+          showMessage(document.getElementById("passError"), false);
 
           if (email === "") {
-            document.getElementById("userError").style.display = "block";
+            showMessage(document.getElementById("userError"), true);
             return;
           }
 
           if (password === "") {
-            document.getElementById("passError").style.display = "block";
+            showMessage(document.getElementById("passError"), true);
             return;
           }
 
           try {
+            const persistenceType = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+            await setPersistence(auth, persistenceType);
+
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const firebaseUser = userCredential.user;
             console.log("Usuario autenticado:", firebaseUser);
             window.location.href = "inicio.html";
           } catch (error) {
             console.error("Error al iniciar sesión:", error);
-            if (error.code === 'auth/user-not-found') {
-              userNotFound.style.display = "block";
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-email') {
+              showMessage(userNotFound, true);
             } else if (error.code === 'auth/wrong-password') {
-              passIncorrect.style.display = "block";
+              showMessage(passIncorrect, true);
             } else {
               alert("Ocurrió un error al iniciar sesión: " + error.message);
             }
@@ -81,10 +92,6 @@
                 this.classList.toggle('fa-eye-slash');
             });
         }
-        
-        // Ya no necesitas un event listener para forgotPasswordLink aquí,
-        // ya que el enlace ahora apunta directamente a otro HTML.
-
       });
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
