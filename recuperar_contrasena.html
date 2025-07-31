@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperar Contraseña - Colosal</title>
     <link rel="shortcut icon" href="img/minilogo.png" type="image/x-icon">
-    <link rel="stylesheet" href="styles.css"> <script type="module">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
       import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      // Importación de Firestore
+      import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
       // Tu configuración de Firebase
       const firebaseConfig = {
@@ -23,13 +26,31 @@
       // Inicializa Firebase
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
+      // Inicializa Firestore
+      const db = getFirestore(app);
 
       document.addEventListener('DOMContentLoaded', function() {
         const resetPasswordForm = document.getElementById("resetPasswordForm");
         const emailInput = document.getElementById("resetPasswordEmail");
         const resetMessage = document.getElementById("resetMessage");
         const errorMessage = document.getElementById("errorMessage");
-        const emailError = document.getElementById("emailError"); // Para validación de campo vacío
+        const emailError = document.getElementById("emailError");
+
+        // Función para mostrar mensajes de éxito o error
+        const showMessage = (element, message, isError = false) => {
+            element.textContent = message;
+            element.style.display = 'block';
+            element.style.color = isError ? '#f44336' : '#4CAF50';
+            // Ocultamos los otros mensajes para evitar conflictos
+            if (isError) {
+                if (element.id !== 'errorMessage') errorMessage.style.display = 'none';
+                if (element.id !== 'emailError') emailError.style.display = 'none';
+                if (element.id !== 'resetMessage') resetMessage.style.display = 'none';
+            } else {
+                errorMessage.style.display = 'none';
+                emailError.style.display = 'none';
+            }
+        };
 
         resetPasswordForm.addEventListener("submit", async (event) => {
           event.preventDefault();
@@ -42,25 +63,31 @@
           emailError.style.display = "none";
 
           if (email === "") {
-            emailError.textContent = "Por favor, ingresa tu correo electrónico.";
-            emailError.style.display = "block";
+            showMessage(emailError, "Por favor, ingresa tu correo electrónico.", true);
             return;
           }
 
           try {
-            await sendPasswordResetEmail(auth, email);
-            resetMessage.textContent = "Se ha enviado un correo electrónico para restablecer tu contraseña. Revisa tu bandeja de entrada (y la carpeta de spam).";
-            resetMessage.style.display = "block";
+            // 1. Verificar si el correo existe en Firestore
+            const userDocRef = doc(db, "usuarios", email);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (userDocSnap.exists()) {
+                // 2. Si el usuario existe en Firestore, envía el correo de restablecimiento
+                await sendPasswordResetEmail(auth, email);
+                showMessage(resetMessage, "Se ha enviado un correo electrónico para restablecer tu contraseña. Revisa tu bandeja de entrada (y la carpeta de spam).");
+            } else {
+                // 3. Si el correo no existe en Firestore, muestra un error personalizado
+                showMessage(errorMessage, "No hay un usuario registrado con ese correo electrónico.", true);
+            }
           } catch (error) {
-            console.error("Error al enviar correo de restablecimiento:", error);
+            console.error("Error al procesar la solicitud:", error);
+            // Manejo de errores específicos de Firebase Authentication si fallara el envío
             let displayError = "Ocurrió un error al enviar el correo electrónico.";
             if (error.code === 'auth/invalid-email') {
                 displayError = "El formato del correo electrónico es inválido.";
-            } else if (error.code === 'auth/user-not-found') {
-                displayError = "No hay un usuario registrado con ese correo electrónico.";
             }
-            errorMessage.textContent = displayError;
-            errorMessage.style.display = "block";
+            showMessage(errorMessage, displayError, true);
           }
         });
       });

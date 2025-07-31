@@ -22,6 +22,8 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
       import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+      // Importación de Firestore
+      import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
       // Tu configuración de Firebase (asegúrate de que sea la misma que en ingresar.html)
       const firebaseConfig = {
@@ -37,6 +39,8 @@
       // Inicializa Firebase
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
+      // Inicializa Firestore
+      const db = getFirestore(app);
 
       document.addEventListener('DOMContentLoaded', function() {
         const registerForm = document.getElementById("registerForm");
@@ -45,54 +49,81 @@
         const usernameError = document.getElementById("usernameError");
         const passwordError = document.getElementById("passwordError");
         const userExists = document.getElementById("userExists");
-        const togglePassword = document.getElementById("togglePassword"); // Añade esto si quieres el toggle en el registro
+        const registerMessage = document.getElementById("registerMessage"); // Agregamos este ID para mensajes de éxito
+        const togglePassword = document.getElementById("togglePassword");
+
+        // Función para mostrar mensajes de éxito o error
+        const showMessage = (element, message, isError = false) => {
+            element.textContent = message;
+            element.style.display = 'block';
+            element.style.color = isError ? '#f44336' : '#4CAF50';
+            // Ocultamos los otros mensajes para evitar conflictos
+            if (isError) {
+                if (element.id !== 'usernameError') usernameError.style.display = 'none';
+                if (element.id !== 'passwordError') passwordError.style.display = 'none';
+                if (element.id !== 'userExists') userExists.style.display = 'none';
+                if (element.id !== 'registerMessage') registerMessage.style.display = 'none';
+            } else {
+                usernameError.style.display = 'none';
+                passwordError.style.display = 'none';
+                userExists.style.display = 'none';
+            }
+        };
 
         registerForm.addEventListener("submit", async (event) => {
           event.preventDefault();
 
-          const email = newUsernameInput.value.trim(); // Usar email para el registro en Firebase
+          const email = newUsernameInput.value.trim();
           const password = newPasswordInput.value.trim();
 
+          // Limpiar mensajes anteriores
           usernameError.style.display = "none";
           passwordError.style.display = "none";
           userExists.style.display = "none";
+          registerMessage.style.display = "none";
 
           if (email === "") {
-            usernameError.style.display = "block";
-            usernameError.textContent = "El correo electrónico es obligatorio";
+            showMessage(usernameError, "El correo electrónico es obligatorio", true);
             return;
           }
 
           if (password === "") {
-            passwordError.style.display = "block";
+            showMessage(passwordError, "La contraseña es obligatoria", true);
             return;
           }
 
           try {
+            // 1. Crear el usuario en Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            // El usuario ha sido registrado exitosamente
-            const firebaseUser = userCredential.user;
-            console.log("Usuario registrado:", firebaseUser);
-            alert("Usuario registrado con éxito.");
-            window.location.href = "ingresar.html"; // Redirigir a la página de inicio de sesión
+            const user = userCredential.user;
+
+            // 2. Guardar los datos del usuario en Firestore
+            await setDoc(doc(db, "usuarios", email), {
+                email: user.email,
+                uid: user.uid,
+                creado: serverTimestamp()
+            });
+
+            // 3. Mostrar mensaje de éxito y redirigir
+            showMessage(registerMessage, "¡Registro exitoso! Redirigiendo...", false);
+            setTimeout(() => {
+                window.location.href = "ingresar.html";
+            }, 2000); // Redirige después de 2 segundos
+
           } catch (error) {
             console.error("Error al registrar usuario:", error);
             if (error.code === 'auth/email-already-in-use') {
-              userExists.style.display = "block";
-              userExists.textContent = "Este correo electrónico ya está en uso";
+              showMessage(userExists, "Este correo electrónico ya está en uso", true);
             } else if (error.code === 'auth/invalid-email') {
-              usernameError.style.display = "block";
-              usernameError.textContent = "El formato del correo electrónico no es válido";
+              showMessage(usernameError, "El formato del correo electrónico no es válido", true);
             } else if (error.code === 'auth/weak-password') {
-              passwordError.style.display = "block";
-              passwordError.textContent = "La contraseña debe tener al menos 6 caracteres";
+              showMessage(passwordError, "La contraseña debe tener al menos 6 caracteres", true);
             } else {
               alert("Ocurrió un error al registrar el usuario: " + error.message);
             }
           }
         });
 
-        // Opcional: Añadir funcionalidad de mostrar/ocultar contraseña en el registro
         if (togglePassword) {
             togglePassword.addEventListener('click', function() {
                 const type = newPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -121,7 +152,7 @@
               <i id="togglePassword" class="fas fa-eye toggle-password"></i>
               <p id="passwordError" class="error-message">La contraseña es obligatoria</p>
           </div>
-            <button type="submit">Registrar</button>
+            <p id="registerMessage" class="success-message" style="display: none;"></p> <button type="submit">Registrar</button>
         </form>
         <div class="options">
             <a href="ingresar.html">¿Ya tienes una cuenta? Inicia sesión</a>
