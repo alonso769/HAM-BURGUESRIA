@@ -53,7 +53,7 @@
 
     <section class="featured-products" id="menu">
         <div class="section-title">
-            <h2>Nuestros Favoritos</h2>
+            <h2>Productos</h2>
         </div>
         <div class="products-container" id="products-container">
             </div>
@@ -396,7 +396,7 @@
 
         async function cargarProductos() {
             try {
-                // Obtener todos los documentos de la colección 'productos'
+                // Obtenemos todos los documentos de la colección 'productos'
                 const productosRef = collection(db, 'productos');
                 const querySnapshot = await getDocs(productosRef);
 
@@ -405,34 +405,54 @@
                     return;
                 }
 
-                let productosHTML = '';
+                // Agrupamos los productos por categoría
+                const productosPorCategoria = {};
                 querySnapshot.forEach(doc => {
                     const producto = doc.data();
-                    productosHTML += `
-                        <div class="product-card">
-                            <div class="product-img">
-                                <img src="${producto.imagen}" alt="${producto.nombre}">
-                            </div>
-                            <div class="product-info">
-                                <h3>${producto.nombre}</h3>
-                                <p>${producto.descripcion}</p>
-                                <span class="price">S/. ${producto.precio.toFixed(2)}</span>
-                                <a href="#" class="btn btn-ordenar"
-                                    data-producto="${doc.id}"
-                                    data-precio="${producto.precio}"
-                                    data-nombre="${producto.nombre}"
-                                    data-descripcion="${producto.descripcion}">
-                                    Ordenar
-                                </a>
-                            </div>
-                        </div>
-                    `;
+                    const categoria = producto.categoria || 'Sin Categoría';
+                    if (!productosPorCategoria[categoria]) {
+                        productosPorCategoria[categoria] = [];
+                    }
+                    // Asegúrate de que el campo para la URL de la imagen sea 'imagenUrl'
+                    // ya que así lo definiste en tu código de inserción.
+                    productosPorCategoria[categoria].push({ id: doc.id, ...producto });
                 });
+
+                // Generamos el HTML dinámicamente
+                let productosHTML = '';
+                for (const categoria in productosPorCategoria) {
+                    productosHTML += `<h3 class="category-title">${categoria}</h3>`;
+                    productosHTML += `<div class="products-grid">`;
+                    
+                    productosPorCategoria[categoria].forEach(producto => {
+                        productosHTML += `
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="${producto.imagenUrl}" alt="${producto.nombre}">
+                                </div>
+                                <div class="product-info">
+                                    <h3>${producto.nombre}</h3>
+                                    <p>${producto.descripcion}</p>
+                                    <span class="price">S/. ${producto.precio.toFixed(2)}</span>
+                                    <a href="#" class="btn btn-ordenar"
+                                        data-producto="${producto.id}"
+                                        data-precio="${producto.precio}"
+                                        data-nombre="${producto.nombre}"
+                                        data-descripcion="${producto.descripcion}">
+                                        Ordenar
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    productosHTML += `</div>`;
+                }
                 
                 // Inyectar el HTML generado en el contenedor
                 productsContainer.innerHTML = productosHTML;
 
-                // Vuelve a adjuntar los event listeners a los nuevos botones
+                // Re-adjuntar los event listeners a los nuevos botones
                 adjuntarListenersBotonesOrdenar();
 
             } catch (error) {
@@ -454,7 +474,6 @@
                         descripcion: boton.dataset.descripcion || ''
                     };
 
-                    // ... (El resto de tu lógica para mostrar el modal de ordenar) ...
                     try {
                         const responseOrden = await fetch('ordenar.html');
                         if (!responseOrden.ok) {
