@@ -21,7 +21,11 @@
             </div>
             <ul class="nav-menu">
                 <li><a href="#inicio">Inicio</a></li>
-                <li><a href="#menu">Menú</a></li>
+                <li class="has-submenu">
+                    <a href="" id="menu-link">Menú</a>
+                    <ul class="submenu" id="category-submenu">
+                        </ul>
+                </li>
                 <li><a href="#nosotros">Nosotros</a></li>
                 <li><a href="#locales">Locales</a></li>
                 <li><a href="#contacto">Contacto</a></li>
@@ -231,6 +235,9 @@
         const mapContainer = document.getElementById('map-container');
         const mapIframe = document.getElementById('map-iframe');
         const closeMapBtn = document.getElementById('close-map-btn');
+        const menuLink = document.getElementById('menu-link');
+        const categorySubmenu = document.getElementById('category-submenu');
+        const productsContainer = document.getElementById('products-container');
 
         // Función para mostrar/ocultar el menú desplegable
         userIcon.addEventListener('click', (event) => {
@@ -391,9 +398,95 @@
             }
         });
 
-        // NUEVA FUNCIÓN PARA CARGAR PRODUCTOS DESDE FIRESTORE
-        const productsContainer = document.getElementById('products-container');
+        // Agrega un listener para el clic en "MENÚ"
+        menuLink.addEventListener('click', (event) => {
+            // Solo si estamos en una pantalla pequeña, muestra/oculta el submenú
+            if (window.innerWidth <= 768) {
+                event.preventDefault();
+                // Alterna la clase 'active' en el elemento padre del submenú
+                menuLink.parentElement.classList.toggle('active');
+            }
+        });
 
+        // Nueva función para cargar las categorías y construir el submenú
+        async function cargarCategoriasYSubmenu() {
+            try {
+                const productosRef = collection(db, 'productos');
+                const querySnapshot = await getDocs(productosRef);
+                
+                if (querySnapshot.empty) {
+                    console.log("No se encontraron productos para generar el menú.");
+                    return;
+                }
+
+                const categorias = new Set();
+                querySnapshot.forEach(doc => {
+                    const producto = doc.data();
+                    if (producto.categoria) {
+                        categorias.add(producto.categoria);
+                    }
+                });
+
+                // Construir el HTML del submenú
+                let submenuHTML = '';
+                categorias.forEach(categoria => {
+                    const linkId = `category-${categoria.replace(/\s+/g, '-').toLowerCase()}`;
+                    submenuHTML += `<li><a href="#${linkId}" class="category-link" data-category-id="${linkId}">${categoria}</a></li>`;
+                });
+                categorySubmenu.innerHTML = submenuHTML;
+
+                // Adjuntar listeners a los nuevos enlaces del submenú
+                const categoryLinks = document.querySelectorAll('.category-link');
+                categoryLinks.forEach(link => {
+                    link.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        const targetId = event.target.getAttribute('href').substring(1);
+                        
+                        // Oculta el submenú después de hacer clic
+                        const parentSubmenu = event.target.closest('.has-submenu');
+                        if (parentSubmenu) {
+                            parentSubmenu.classList.remove('active');
+                        }
+
+                        // Desplazarse directamente a la categoría
+                        scrollToCategory(targetId);
+                        
+                        // Oculta el submenú después de hacer clic en móvil
+                        if (window.innerWidth <= 768) {
+                            // Cierra el submenú
+                            menuLink.parentElement.classList.remove('active');
+                            
+                            // Cierra el menú principal si está abierto
+                            if (navMenu.classList.contains('active')) {
+                                navMenu.classList.remove('active');
+                            }
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error("Error al cargar las categorías:", error);
+            }
+        }
+
+        // Función para desplazar a la categoría seleccionada
+        function scrollToCategory(categoryId) {
+            const targetElement = document.getElementById(categoryId);
+            const headerHeight = document.querySelector('header').offsetHeight; // Obtiene la altura del header
+
+            if (targetElement) {
+                // Calcula la posición vertical a la que se debe desplazar
+                // Resta la altura del header para que el elemento no quede oculto.
+                const y = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                
+                window.scrollTo({
+                    top: y,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // NUEVA FUNCIÓN PARA CARGAR PRODUCTOS DESDE FIRESTORE
         async function cargarProductos() {
             try {
                 // Obtenemos todos los documentos de la colección 'productos'
@@ -413,15 +506,14 @@
                     if (!productosPorCategoria[categoria]) {
                         productosPorCategoria[categoria] = [];
                     }
-                    // Asegúrate de que el campo para la URL de la imagen sea 'imagenUrl'
-                    // ya que así lo definiste en tu código de inserción.
                     productosPorCategoria[categoria].push({ id: doc.id, ...producto });
                 });
 
                 // Generamos el HTML dinámicamente
                 let productosHTML = '';
                 for (const categoria in productosPorCategoria) {
-                    productosHTML += `<h3 class="category-title">${categoria}</h3>`;
+                    const categoryId = `category-${categoria.replace(/\s+/g, '-').toLowerCase()}`;
+                    productosHTML += `<h3 class="category-title" id="${categoryId}">${categoria}</h3>`;
                     productosHTML += `<div class="products-grid">`;
                     
                     productosPorCategoria[categoria].forEach(producto => {
@@ -438,8 +530,8 @@
                                         data-producto="${producto.id}"
                                         data-precio="${producto.precio}"
                                         data-nombre="${producto.nombre}"
-                                        data-descripcion="${producto.descripcion}">
-                                        Ordenar
+                                        data-descripcion="${producto.descripcion}"
+                                        data-categoria="${producto.categoria}"> Ordenar
                                     </a>
                                 </div>
                             </div>
@@ -471,8 +563,9 @@
                     currentProduct = {
                         nombre: boton.dataset.nombre,
                         precio: parseFloat(boton.dataset.precio),
-                        descripcion: boton.dataset.descripcion || ''
-                    };
+                        descripcion: boton.dataset.descripcion || '',
+                        categoria: boton.dataset.categoria
+                   };
 
                     try {
                         const responseOrden = await fetch('ordenar.html');
@@ -498,6 +591,17 @@
                         if (precioOrdenDisplay) precioOrdenDisplay.textContent = `S/. ${currentProduct.precio.toFixed(2)}`;
                         if (agregarBtn) agregarBtn.textContent = `Agregar S/. ${currentProduct.precio.toFixed(2)}`;
                         if (cantidadInput) cantidadInput.value = 1; // Asegura que la cantidad inicial sea 1
+
+                        // LÓGICA AGREGADA AQUÍ PARA OCULTAR LAS OPCIONES
+                        const opcionesContainer = ordenarContainer.querySelector('.opciones-container');
+                        if (opcionesContainer) {
+                            if (currentProduct.categoria === 'Malteadas' || currentProduct.categoria === 'Bebidas') {
+                                opcionesContainer.style.display = 'none';
+                            } else {
+                                // Para asegurar que se muestre en productos que sí tienen opciones
+                                opcionesContainer.style.display = 'block'; 
+                            }
+                        }
 
                         // Lógica para los botones de cantidad (dentro del modal de ordenar)
                         botonesCantidad.forEach(btn => {
@@ -569,7 +673,8 @@
         // Llama a la función `cargarProductos` cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', () => {
             // Llama a la función para cargar los productos dinámicamente
-            cargarProductos();            
+            cargarProductos();
+            cargarCategoriasYSubmenu();
             updateCartCount();
             cartIcon.addEventListener('click', mostrarCarrito);
         });
@@ -903,9 +1008,36 @@
             seleccionPagoContainer.querySelectorAll('button[data-metodo]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const metodoPago = btn.dataset.metodo;
+
+                    let resumenProductos = '';
+                    cart.forEach(item => {
+                        const itemTotal = item.precio * item.cantidad;
+                        resumenProductos += `(x${item.cantidad}) ${item.nombre} - `;
+                        if (item.opciones.length > 0) {
+                            resumenProductos += `Opciones: ${item.opciones.join(', ')}\n`;
+                        }
+                    });
+
+                    // Reemplaza los saltos de línea con %0A para que WhatsApp los reconozca
+                    const mensaje = `
+                        ¡Nuevo pedido de Ralph's Sanguchería! 🥪
+
+                        🧾 Detalle del pedido:
+                        ${resumenProductos}
+                        💰 Total a pagar: S/. ${totalAPagar.toFixed(2)}
+
+                        👤 Cliente: ${nombreCliente}
+                        📞 Teléfono: ${telefonoCliente}
+                        📍 Dirección: ${direccionCliente}
+
+                        💳 Método de pago: ${metodoPago.replace('_', ' ').toUpperCase()}
+
+                        ✅ ¡Listo para preparar!
+                    `;
                     
-                    alert(`¡Pedido de Ralph's Sanguchería confirmado para ${nombreCliente} (${telefonoCliente}) en ${direccionCliente}!\nTotal: S/. ${totalAPagar.toFixed(2)}\nMétodo de pago: ${metodoPago.replace('_', ' ').toUpperCase()}.\n¡Gracias por tu compra!`);
-                    
+                    alert(mensaje);
+
+                    // Después de la alerta, limpiamos el carrito y cerramos el modal
                     cart = []; 
                     updateCartCount();
                     cerrarTodosLosModales();

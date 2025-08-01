@@ -246,7 +246,7 @@
 
         .section-title {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: -20px;
         }
 
         .section-title h2 {
@@ -271,22 +271,42 @@
         }
 
         .products-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px; /* Espacio entre los productos */
+            display: flex;
+            flex-wrap: wrap; /* Permite que los elementos se ajusten en varias líneas */
+            gap: 30px; /* Espacio entre las tarjetas */
             justify-content: center;
-            align-items: stretch;
             padding: 20px;
             margin: auto;
             max-width: 1200px; /* O el ancho que desees para el contenedor */
         }
 
+        /* Grilla para cada categoría */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px; /* Espacio entre los productos */
+            align-items: stretch; /* Esto asegura que todas las tarjetas tengan la misma altura */
+        }
+
+        /* Títulos de categoría */
+        .category-title {
+            width: 100%; /* Ocupa todo el ancho del contenedor */
+            text-align: center; /* Centra el título */
+            font-size: 2.5rem; /* Tamaño de fuente más grande */
+            color: var(--primary-color); /* Usa el color principal de tu tema */
+            margin: 40px 0 20px 0; /* Espaciado superior e inferior */
+            border-bottom: 3px solid var(--primary-color); /* Línea decorativa debajo del título */
+            padding-bottom: 10px;
+        }
+
         .product-card {
-            background-color: var(--secondary-color);
+            background-color: var(--card-background-color);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Ocupa toda la altura disponible en la grilla */
         }
 
         .product-card:hover {
@@ -301,8 +321,8 @@
         .product-img img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
+            object-fit: cover; /* Recorta la imagen para que cubra el contenedor sin distorsionarse */
+            transition: transform 0.3s ease;
         }
 
         .product-card:hover .product-img img {
@@ -310,18 +330,21 @@
         }
 
         .product-info {
-            padding: 20px;
-            text-align: center;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Permite que este contenedor se expanda */
+            justify-content: space-between; /* Mantiene los elementos distribuidos */
         }
 
         .product-info h3 {
-            font-size: 20px;
+            margin-top: 0;
             margin-bottom: 10px;
-            color: var(--primary-color);
         }
 
         .product-info p {
             margin-bottom: 15px;
+            flex-grow: 1; /* Permite que el párrafo ocupe el espacio restante */
             color: var(--text-color);
         }
 
@@ -1300,5 +1323,139 @@
                 max-width: 100%;
                 margin-left: 0;
                 margin-top: 20px;
+            }
+        }
+
+        /* Estilos para el menú de navegación (añade o modifica) */
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        /* Solo aplica margen a los ítems de primer nivel del nav */
+        nav > ul > li {
+            margin-left: 20px;
+        }
+
+        /* Elimina el margen en los ítems del submenú */
+        .submenu li {
+            margin-left: 0;
+        }
+
+        nav li {
+            position: relative; /* Esencial para posicionar el submenú */
+        }
+
+        /* Submenú */
+        .submenu {
+            list-style: none;
+            position: absolute;
+            top: 100%; /* Coloca el submenú justo debajo del elemento padre */
+            left: 700px;
+            background-color: white; /* Fondo del header */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            min-width: 200px;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+        }
+
+        /* Cuando el mouse está sobre el menú principal, muestra el submenú */
+        .has-submenu:hover > .submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .submenu li a {
+            display: block;
+            padding: 10px 15px;
+            white-space: nowrap;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .submenu li a:hover {
+            background-color: #ca1334;
+            color: #fff;
+        }
+
+        /* Media Query para pantallas grandes (escritorio) */
+        @media (min-width: 769px) {
+            /* Muestra 3 productos por fila en escritorio */
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            /* Oculta el menú desplegable de móvil */
+            .has-submenu .submenu-movil {
+                display: none;
+            }
+        }
+
+        /* Media Query para pantallas pequeñas (móvil y tablet) */
+        @media (max-width: 768px) {
+            /* Muestra 1 producto por fila en móvil */
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Oculta el menú de navegación principal por defecto */
+            header nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 60px; /* Ajusta según la altura de tu header */
+                left: 0;
+                background-color: var(--header-bg-color);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            /* Muestra el menú de navegación cuando está "activo" */
+            header nav.active ul {
+                display: flex;
+                transform: translateX(0);
+            }
+            
+            /* Estilos del submenú para móvil */
+            .has-submenu {
+                position: static; /* Restaura el posicionamiento */
+                width: 100%;
+            }
+            
+            .has-submenu .submenu {
+                position: static;
+                display: none;
+                width: 100%;
+                background-color: #fff; 
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                transition: none;
+                padding: 10px 0;
+                box-sizing: border-box;
+            }
+            
+            .has-submenu.active .submenu {
+                display: block; /* Muestra el submenú cuando está "activo" */
+            }
+
+            .submenu li a {
+                padding-left: 20px; /* Indenta los enlaces del submenú */
+                color: var(--header-bg-color);
+            }
+            
+            .has-submenu > a {
+                position: relative;
+                display: block;
+                width: 100%;
+                text-align: center;
             }
         }
