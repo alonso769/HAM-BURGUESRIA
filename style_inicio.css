@@ -221,7 +221,6 @@
         }
 
         .btn {
-            display: inline-block;
             background-color: var(--primary-color);
             color: var(--secondary-color);
             padding: 12px 30px;
@@ -231,11 +230,14 @@
             text-transform: uppercase;
             transition: all 0.3s;
             border: 2px solid var(--primary-color);
+            width: 200px;
+            text-align: center;
+            margin: 0 auto;
         }
 
         .btn:hover {
             background-color: transparent;
-            color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
         /* Featured Products */
@@ -1218,7 +1220,7 @@
             justify-content: center;
             gap: 30px;
             transition: all 0.5s ease-in-out;
-            padding: 20px;
+            padding: 30px;
         }
 
         /* Estilos de la grilla original (para la vista normal) */

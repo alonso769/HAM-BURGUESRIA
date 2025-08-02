@@ -57,7 +57,7 @@
 
     <section class="featured-products" id="menu">
         <div class="section-title">
-            <h2>Productos</h2>
+            <h2>La Carta</h2>   
         </div>
         <div class="products-container" id="products-container">
             </div>
@@ -651,7 +651,7 @@
 
                                 agregarAlCarrito(itemToAdd);
                                 cerrarTodosLosModales(); // Cierra el modal de ordenar
-                                alert(`"${itemToAdd.nombre}" (${itemToAdd.cantidad}) agregado al carrito.`); // Notificación simple
+                                mostrarCarrito();
                             });
                         }
 
@@ -932,6 +932,15 @@
                     alert('Tu carrito está vacío. Por favor, agrega productos antes de proceder al pago.');
                     return;
                 }
+
+                const user = auth.currentUser; // Obtenemos el usuario actual de Firebase
+                if (!user) {
+                    // Si no hay usuario autenticado, mostramos la alerta
+                    alert('Debes iniciar sesión o registrarte para proceder al pago.');
+                    window.location.href = "ingresar.html";
+                    return;
+                }
+
                 cerrarTodosLosModales();
                 mostrarConfirmarPedidoGeneral();
             });
@@ -1009,21 +1018,31 @@
                 btn.addEventListener('click', () => {
                     const metodoPago = btn.dataset.metodo;
 
-                    let resumenProductos = '';
+                    let resumenProductosTexto = '';
+                    let resumenProductosWhatsApp = '';
+                    
                     cart.forEach(item => {
                         const itemTotal = item.precio * item.cantidad;
-                        resumenProductos += `(x${item.cantidad}) ${item.nombre} - `;
+
+                        // Texto para alerta web
+                        resumenProductosTexto += `• ${item.nombre} (x${item.cantidad}) - S/. ${itemTotal.toFixed(2)}\n`;
                         if (item.opciones.length > 0) {
-                            resumenProductos += `Opciones: ${item.opciones.join(', ')}\n`;
+                            resumenProductosTexto += `   Opciones: ${item.opciones.join(', ')}\n`;
+                        }
+
+                        // Texto para WhatsApp
+                        resumenProductosWhatsApp += `• ${item.nombre} (x${item.cantidad}) - S/. ${itemTotal.toFixed(2)}%0A`;
+                        if (item.opciones.length > 0) {
+                            resumenProductosWhatsApp += `   Opciones: ${item.opciones.join(', ')}%0A`;
                         }
                     });
 
-                    // Reemplaza los saltos de línea con %0A para que WhatsApp los reconozca
-                    const mensaje = `
-                        ¡Nuevo pedido de Ralph's Sanguchería! 🥪
+                    // Mensaje desde la Web
+                    const mensajeWeb = 
+                        `¡Pedido de Ralph's Sanguchería confirmado!
 
                         🧾 Detalle del pedido:
-                        ${resumenProductos}
+                        ${resumenProductosTexto}
                         💰 Total a pagar: S/. ${totalAPagar.toFixed(2)}
 
                         👤 Cliente: ${nombreCliente}
@@ -1032,18 +1051,36 @@
 
                         💳 Método de pago: ${metodoPago.replace('_', ' ').toUpperCase()}
 
-                        ✅ ¡Listo para preparar!
-                    `;
-                    
-                    alert(mensaje);
+                        ✅ ¡Gracias por tu compra!`;
 
-                    // Después de la alerta, limpiamos el carrito y cerramos el modal
+                    // Mensaje para WhatsApp
+                    const mensajeWhatsApp = 
+                        "¡Nuevo pedido de Ralph's Sanguchería!\n" +
+                        "*Detalle del pedido:*\n" +
+                        resumenProductosTexto +
+                        "*Total a pagar:* S/. " + totalAPagar.toFixed(2) + "\n" +
+                        "*Cliente:* " + nombreCliente + "\n" +
+                        "*Teléfono:* " + telefonoCliente + "\n" +
+                        "*Dirección:* " + direccionCliente + "\n" +
+                        "*Método de pago:* " + metodoPago.replace('_', ' ').toUpperCase() + "\n" +
+                        "¡Listo para preparar!";
+
+                    // Mostrar mensaje en pantalla
+                    alert(mensajeWeb);
+
+                    // Enviar por WhatsApp
+                    const mensajeCodificado = encodeURIComponent(mensajeWhatsApp);
+                    const numeroDestino = '51984291729';
+                    const urlWhatsApp = `https://wa.me/${numeroDestino}?text=${mensajeCodificado}`;
+                    window.open(urlWhatsApp, '_blank');
+
                     cart = []; 
                     updateCartCount();
                     cerrarTodosLosModales();
                 });
             });
         }
+
     </script>
 </body>
 </html>
