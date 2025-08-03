@@ -107,10 +107,9 @@
             justify-content: space-between;
             align-items: center;
             max-width: 1260px;
-            margin: 0 295px;
-            margin-left: 394px;
+            margin: 0 auto;
             padding: 0 20px;
-        }
+        }        
 
         .logo-container { /* Nuevo contenedor para el logo */
             display: flex;
