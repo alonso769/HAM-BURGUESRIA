@@ -43,7 +43,6 @@
         .user-profile-container {
             position: relative;
             display: inline-block;
-            right: -275px; /* Ajusta la posición del contenedor del usuario */
         }
 
         #user-icon {
@@ -109,6 +108,8 @@
             max-width: 1260px;
             margin: 0 auto;
             padding: 0 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }        
 
         .logo-container { /* Nuevo contenedor para el logo */
@@ -126,9 +127,9 @@
             color: white;
             font-size: 20px;
             font-weight: 700;
-            margin-right: -110px;
-            margin-left: -275px;
+            margin: 0 20px 0 0; /* margen derecho suave, elimina los negativos */
             min-width: 100px;
+            flex-shrink: 0;
         }
 
         .logo {
@@ -149,6 +150,11 @@
         .nav-menu {
             display: flex;
             list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+            min-width: 0;
         }
 
         .nav-menu li {
@@ -621,6 +627,20 @@
         }
 
         /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .brand-text {
+                font-size: 18px;
+            }
+
+            .nav-menu li {
+                margin-left: 15px;
+            }
+
+            .header-right {
+                gap: 20px;
+            }
+        }
+
         @media (max-width: 768px) {
             .nav-menu {
                 display: none;
@@ -1378,7 +1398,7 @@
             list-style: none;
             position: absolute;
             top: 100%; /* Coloca el submenú justo debajo del elemento padre */
-            left: 600px;
+            left: 740px;
             background-color: white; /* Fondo del header */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
