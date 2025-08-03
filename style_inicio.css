@@ -1379,7 +1379,7 @@
             list-style: none;
             position: absolute;
             top: 100%; /* Coloca el submenú justo debajo del elemento padre */
-            left: 560px;
+            left: 600px;
             background-color: white; /* Fondo del header */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 5px;
