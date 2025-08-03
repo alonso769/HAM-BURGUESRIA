@@ -73,6 +73,8 @@
         registerForm.addEventListener("submit", async (event) => {
           event.preventDefault();
 
+          const displayNameInput = document.getElementById("displayName");
+          const displayName = displayNameInput.value.trim();
           const email = newUsernameInput.value.trim();
           const password = newPasswordInput.value.trim();
 
@@ -101,6 +103,7 @@
             await setDoc(doc(db, "usuarios", email), {
                 email: user.email,
                 uid: user.uid,
+                nombre: displayName,
                 creado: serverTimestamp()
             });
 
@@ -141,6 +144,9 @@
       <h2>Registrar Usuario</h2>
       <form id="registerForm">
           <div class="input-group">
+              <label for="displayName">Nombre de Usuario</label>
+              <input type="text" id="displayName" placeholder="Ingresa tu nombre de usuario" required>
+              <p></p>
               <label for="newUsername">Correo Electrónico</label>
               <input type="email" id="newUsername" placeholder="Ingresa tu correo electrónico" required>
               <p id="usernameError" class="error-message">El correo electrónico es obligatorio</p>

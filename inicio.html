@@ -14,7 +14,11 @@
 <body>
     <header> 
         <div class="header-container">
-            <div class="logo-container"> 
+            <div class="brand-text hide-on-mobile">
+                    <span>RALPH'S</span>
+                    <span>SANGUCHERÍA</span>
+                </div>
+            <div class="logo-container">
                 <div class="logo">
                     <img src="img/logo.png" alt="Ralph's Sanguchería Logo">
                 </div>
@@ -38,11 +42,14 @@
                 <div class="user-profile-container">
                     <i class="fas fa-user-circle" id="user-icon"></i>
                     <div class="user-dropdown-menu" id="user-dropdown">
-                        </div>
+                    </div>
                 </div>
                 <div class="mobile-menu-btn">
                     <i class="fas fa-bars"></i>
                 </div>
+            </div>
+            <div class="theme-toggle-container">
+                <i id="theme-toggle-icon" class="fas fa-moon"></i>
             </div>
         </div>
     </header>
@@ -489,7 +496,6 @@
         // NUEVA FUNCIÓN PARA CARGAR PRODUCTOS DESDE FIRESTORE
         async function cargarProductos() {
             try {
-                // Obtenemos todos los documentos de la colección 'productos'
                 const productosRef = collection(db, 'productos');
                 const querySnapshot = await getDocs(productosRef);
 
@@ -498,7 +504,6 @@
                     return;
                 }
 
-                // Agrupamos los productos por categoría
                 const productosPorCategoria = {};
                 querySnapshot.forEach(doc => {
                     const producto = doc.data();
@@ -509,42 +514,72 @@
                     productosPorCategoria[categoria].push({ id: doc.id, ...producto });
                 });
 
-                // Generamos el HTML dinámicamente
                 let productosHTML = '';
                 for (const categoria in productosPorCategoria) {
+                    const productos = productosPorCategoria[categoria];
                     const categoryId = `category-${categoria.replace(/\s+/g, '-').toLowerCase()}`;
+                    const gridId = `${categoryId}-grid`;
+
                     productosHTML += `<h3 class="category-title" id="${categoryId}">${categoria}</h3>`;
-                    productosHTML += `<div class="products-grid">`;
-                    
-                    productosPorCategoria[categoria].forEach(producto => {
-                        productosHTML += `
-                            <div class="product-card">
-                                <div class="product-img">
-                                    <img src="${producto.imagenUrl}" alt="${producto.nombre}">
-                                </div>
-                                <div class="product-info">
-                                    <h3>${producto.nombre}</h3>
-                                    <p>${producto.descripcion}</p>
-                                    <span class="price">S/. ${producto.precio.toFixed(2)}</span>
-                                    <a href="#" class="btn btn-ordenar"
-                                        data-producto="${producto.id}"
-                                        data-precio="${producto.precio}"
-                                        data-nombre="${producto.nombre}"
-                                        data-descripcion="${producto.descripcion}"
-                                        data-categoria="${producto.categoria}"> Ordenar
-                                    </a>
-                                </div>
-                            </div>
-                        `;
+                    productosHTML += `<div class="products-grid" id="${gridId}">`;
+
+                    // Solo los primeros 3 productos
+                    productos.slice(0, 3).forEach(producto => {
+                        productosHTML += generarProductoHTML(producto);
                     });
 
                     productosHTML += `</div>`;
+
+                    // Si hay más de 3 productos, añadir botón Ver más
+                    if (productos.length > 3) {
+                        productosHTML += `
+                            <div style="text-align:center; margin-top: 10px;">
+                                <button type="button" class="btn btn-ordenar ver-mas-btn" data-categoria="${categoria}" onclick="event.stopPropagation();">Ver más</button>
+                            </div>
+                        `;
+                    }
                 }
-                
-                // Inyectar el HTML generado en el contenedor
+
                 productsContainer.innerHTML = productosHTML;
 
-                // Re-adjuntar los event listeners a los nuevos botones
+                // Listeners para Ver más / Ver menos
+                document.querySelectorAll('.ver-mas-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const categoria = btn.dataset.categoria;
+                        const categoryId = `category-${categoria.replace(/\s+/g, '-').toLowerCase()}`;
+                        const grid = document.getElementById(`${categoryId}-grid`);
+                        const productos = productosPorCategoria[categoria];
+
+                        if (btn.textContent === 'Ver más') {
+                            // Agregar los productos restantes
+                            productos.slice(3).forEach(producto => {
+                                grid.insertAdjacentHTML('beforeend', generarProductoHTML(producto));
+                            });
+                            btn.textContent = 'Ver menos';
+                        } else {
+                            // Eliminar los productos adicionales (de índice 3 en adelante)
+                            const cards = grid.querySelectorAll('.product-card');
+                            cards.forEach((card, index) => {
+                                if (index >= 3) card.remove();
+                            });
+                            btn.textContent = 'Ver más';
+                            const heading = document.getElementById(categoryId);
+                            if (heading) {
+                                const headerOffset = 70; // Ajusta este valor según la altura de tu header fijo
+                                const elementPosition = heading.getBoundingClientRect().top + window.scrollY;
+                                const offsetPosition = elementPosition - headerOffset;
+
+                                window.scrollTo({
+                                    top: offsetPosition,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+
+                        adjuntarListenersBotonesOrdenar(); // Re-asignar eventos a nuevos productos
+                    });
+                });
+
                 adjuntarListenersBotonesOrdenar();
 
             } catch (error) {
@@ -553,9 +588,32 @@
             }
         }
 
+        // Función auxiliar para generar HTML de producto
+        function generarProductoHTML(producto) {
+            return `
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="${producto.imagenUrl}" alt="${producto.nombre}">
+                    </div>
+                    <div class="product-info">
+                        <h3>${producto.nombre}</h3>
+                        <p>${producto.descripcion}</p>
+                        <span class="price">S/. ${producto.precio.toFixed(2)}</span>
+                        <a href="#" class="btn btn-ordenar"
+                            data-producto="${producto.id}"
+                            data-precio="${producto.precio}"
+                            data-nombre="${producto.nombre}"
+                            data-descripcion="${producto.descripcion}"
+                            data-categoria="${producto.categoria}"> Ordenar
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
         // NUEVA FUNCIÓN PARA RE-ADJUNTAR LOS LISTENERS
         function adjuntarListenersBotonesOrdenar() {
-            const botonesOrdenar = document.querySelectorAll('.btn-ordenar');
+            const botonesOrdenar = document.querySelectorAll('.btn-ordenar[data-producto]');
             botonesOrdenar.forEach(boton => {
                 boton.addEventListener('click', async (event) => {
                     event.preventDefault();
@@ -568,6 +626,7 @@
                    };
 
                     try {
+                        const productoId = boton.dataset.producto;
                         const responseOrden = await fetch('ordenar.html');
                         if (!responseOrden.ok) {
                             throw new Error(`HTTP error! status: ${responseOrden.status}`);
@@ -1017,6 +1076,16 @@
             seleccionPagoContainer.querySelectorAll('button[data-metodo]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const metodoPago = btn.dataset.metodo;
+                    const ahora = new Date();
+                    
+                    const fechaHora = ahora.toLocaleString('es-PE', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true
+                    });
 
                     let resumenProductosTexto = '';
                     let resumenProductosWhatsApp = '';
@@ -1063,6 +1132,7 @@
                         "*Teléfono:* " + telefonoCliente + "\n" +
                         "*Dirección:* " + direccionCliente + "\n" +
                         "*Método de pago:* " + metodoPago.replace('_', ' ').toUpperCase() + "\n" +
+                        "*Fecha y hora del pedido:* " + fechaHora + "\n" +
                         "¡Listo para preparar!";
 
                     // Mostrar mensaje en pantalla
@@ -1081,6 +1151,29 @@
             });
         }
 
+        const toggleIcon = document.getElementById('theme-toggle-icon');
+        const prefersDark = localStorage.getItem('theme') === 'dark';
+
+        if (prefersDark) {
+            document.body.classList.add('dark-mode');
+            toggleIcon.classList.remove('fa-moon');
+            toggleIcon.classList.add('fa-sun');
+        }
+
+        toggleIcon.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+
+            if (isDark) {
+                toggleIcon.classList.remove('fa-moon');
+                toggleIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                toggleIcon.classList.remove('fa-sun');
+                toggleIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
     </script>
 </body>
 </html>
